@@ -6,14 +6,17 @@
 //  Copyright (c) 2014 Ryan Houlihan. All rights reserved.
 //
 
+#import <Parse/Parse.h>
 #import "CreateEventController.h"
 #import "AppDelegate.h"
 
 @interface CreateEventController () <UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *eventTitle;
+@property (weak, nonatomic) IBOutlet UITextField *eventLocation;
 @property (weak, nonatomic) IBOutlet UITextView *eventInfo;
 @property (weak, nonatomic) IBOutlet UIButton *startTime;
 @property (weak, nonatomic) IBOutlet UIButton *endTime;
+@property (weak, nonatomic) IBOutlet UIButton *createEventButton;
 @property (strong, nonatomic) UIDatePicker *datePicker;
 @property (strong, nonatomic) UIToolbar *toolBar;
 @property (strong, nonatomic) IBOutlet UIDatePicker *entryDateSelected;
@@ -27,6 +30,10 @@
 }
 
 -(IBAction)showDatePicker:(id)sender{
+    // hide keyboard and button
+    self.createEventButton.hidden = YES;
+    [self.view endEditing:YES];
+    
     // mark which button it is for later
     self.startTime.tag = 0;
     self.startTime.tag = 0;
@@ -39,7 +46,6 @@
     CGRect toolbarTargetFrame = CGRectMake(0, self.view.bounds.size.height-216-44, 320, 44);
     CGRect datePickerTargetFrame = CGRectMake(0, self.view.bounds.size.height-216, 320, 216);
    
-    
     UIView *whiteView = [[UIView alloc] initWithFrame:self.view.bounds];
     whiteView.alpha = 0;
     whiteView.backgroundColor = [UIColor whiteColor];
@@ -51,9 +57,15 @@
     self.datePicker = [[UIDatePicker alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height+44, 320, 216)];
     self.datePicker.tag = 10;
     [self.datePicker addTarget:self action:@selector(changeDate:) forControlEvents:UIControlEventValueChanged];
+    if([sender titleForState:UIControlStateNormal] != NULL){
+        NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+        [dateFormat setDateStyle:NSDateFormatterShortStyle];
+        [dateFormat setTimeStyle:NSDateFormatterShortStyle];
+        [self.datePicker setDate:[dateFormat dateFromString:[sender titleForState:UIControlStateNormal]]];
+    }
     [self.view addSubview:self.datePicker];
     
-    self.toolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height, 310, 44)];
+    self.toolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height, 280, 44)];
     self.toolBar.tag = 11;
     self.toolBar.barStyle = UIBarStyleBlackOpaque;
     
@@ -110,8 +122,7 @@
     return [calendar dateByAddingComponents:components toDate:date options:0];
 }
 
--(UIImage *)imageFromText:(NSString *)text
-{
+-(UIImage *)imageFromText:(NSString *)text {
     // set the font type and size
     UIFont *font = [UIFont systemFontOfSize:16.0];
     NSDictionary * attributes = [NSDictionary dictionaryWithObject:font forKey:NSFontAttributeName];
@@ -138,6 +149,7 @@
     [[self.view viewWithTag:9] removeFromSuperview];
     [[self.view viewWithTag:10] removeFromSuperview];
     [[self.view viewWithTag:11] removeFromSuperview];
+    self.createEventButton.hidden = NO;
 }
 
 - (void)dismissDatePicker:(id)sender {    
@@ -174,10 +186,29 @@
     NSString *dateString = [dateFormatter stringFromDate:date ];
     self.eventTitle.text = dateString;
 }
--(void)LabelChange:(id)sender
-{
+
+-(void)LabelChange:(id)sender {
     NSDateFormatter *df = [[NSDateFormatter alloc]init];
     df.dateStyle = NSDateFormatterMediumStyle;
     NSLog(@"%@",[NSString stringWithFormat:@"%@",[df stringFromDate:self.datepicker.date]]);
 }
+
+- (IBAction)createAnEvent:(id)sender {
+    PFObject *event = [PFObject objectWithClassName:@"Event"];
+    event[@"title"] = [self.eventTitle text];
+    event[@"Location"] = [self.eventLocation text];
+    event[@"info"] = [self.eventInfo text];
+    event[@"creator"] = [PFUser currentUser];
+    
+    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+    [dateFormat setDateStyle:NSDateFormatterShortStyle];
+    [dateFormat setTimeStyle:NSDateFormatterShortStyle];
+    event[@"startTime"] = [dateFormat dateFromString:[self.startTime titleForState:UIControlStateNormal]];
+    event[@"endTime"] = [dateFormat dateFromString:[self.endTime titleForState:UIControlStateNormal]];
+    
+    [event saveInBackground];
+    
+    [self.navigationController popToRootViewControllerAnimated:YES];
+}
+
 @end
