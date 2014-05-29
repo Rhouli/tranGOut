@@ -196,7 +196,7 @@
 - (IBAction)createAnEvent:(id)sender {
     PFObject *event = [PFObject objectWithClassName:@"Event"];
     event[@"title"] = [self.eventTitle text];
-    event[@"Location"] = [self.eventLocation text];
+    event[@"location"] = [self.eventLocation text];
     event[@"info"] = [self.eventInfo text];
     event[@"creator"] = [PFUser currentUser];
     

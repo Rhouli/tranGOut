@@ -33,6 +33,9 @@
 		942A4FA2192F208500C93E5B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942A4FA1192F208500C93E5B /* SystemConfiguration.framework */; };
 		942A4FA4192F21C000C93E5B /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942A4FA3192F21C000C93E5B /* Parse.framework */; };
 		942A4FA9192F3A9200C93E5B /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942A4FA8192F3A9200C93E5B /* FacebookSDK.framework */; };
+		94C727EF19373C0A00071093 /* DisplayMapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 94C727EE19373C0A00071093 /* DisplayMapAnnotation.m */; };
+		94D87EE3193722B900E5D10F /* ViewEventController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94D87EE2193722B900E5D10F /* ViewEventController.m */; };
+		94D87EE519372B3E00E5D10F /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94D87EE419372B3E00E5D10F /* MapKit.framework */; };
 		94EF2703192F4798000A6FEC /* EventControllerTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 94EF2702192F4798000A6FEC /* EventControllerTVC.m */; };
 		94EF2709192F486C000A6FEC /* CreateEventController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94EF2708192F486C000A6FEC /* CreateEventController.m */; };
 		94EF270C19305F8A000A6FEC /* WelcomePageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94EF270B19305F8A000A6FEC /* WelcomePageController.m */; };
@@ -81,8 +84,13 @@
 		942A4FA1192F208500C93E5B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		942A4FA3192F21C000C93E5B /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		942A4FA8192F3A9200C93E5B /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../FacebookSDK/FacebookSDK.framework; sourceTree = "<group>"; };
-		94EF2701192F4798000A6FEC /* EventControllerTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EventControllerTVC.h; path = ../EventControllerTVC.h; sourceTree = "<group>"; };
-		94EF2702192F4798000A6FEC /* EventControllerTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EventControllerTVC.m; path = ../EventControllerTVC.m; sourceTree = "<group>"; };
+		94C727ED19373C0A00071093 /* DisplayMapAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DisplayMapAnnotation.h; path = tranGOut/DisplayMapAnnotation.h; sourceTree = "<group>"; };
+		94C727EE19373C0A00071093 /* DisplayMapAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DisplayMapAnnotation.m; path = tranGOut/DisplayMapAnnotation.m; sourceTree = "<group>"; };
+		94D87EE1193722B900E5D10F /* ViewEventController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewEventController.h; sourceTree = "<group>"; };
+		94D87EE2193722B900E5D10F /* ViewEventController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewEventController.m; sourceTree = "<group>"; };
+		94D87EE419372B3E00E5D10F /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		94EF2701192F4798000A6FEC /* EventControllerTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventControllerTVC.h; sourceTree = "<group>"; };
+		94EF2702192F4798000A6FEC /* EventControllerTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventControllerTVC.m; sourceTree = "<group>"; };
 		94EF2707192F486C000A6FEC /* CreateEventController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateEventController.h; sourceTree = "<group>"; };
 		94EF2708192F486C000A6FEC /* CreateEventController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateEventController.m; sourceTree = "<group>"; };
 		94EF270A19305F8A000A6FEC /* WelcomePageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomePageController.h; sourceTree = "<group>"; };
@@ -96,6 +104,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				942A4F96192F205300C93E5B /* CoreLocation.framework in Frameworks */,
+				94D87EE519372B3E00E5D10F /* MapKit.framework in Frameworks */,
 				942A4FA2192F208500C93E5B /* SystemConfiguration.framework in Frameworks */,
 				942A4FA0192F207C00C93E5B /* StoreKit.framework in Frameworks */,
 				942A4F9E192F207500C93E5B /* Security.framework in Frameworks */,
@@ -103,7 +113,6 @@
 				942A4F9A192F206700C93E5B /* MobileCoreServices.framework in Frameworks */,
 				942A4F98192F205E00C93E5B /* libz.dylib in Frameworks */,
 				942A4FA4192F21C000C93E5B /* Parse.framework in Frameworks */,
-				942A4F96192F205300C93E5B /* CoreLocation.framework in Frameworks */,
 				942A4F56192F1C9700C93E5B /* CoreGraphics.framework in Frameworks */,
 				942A4F94192F204400C93E5B /* CFNetwork.framework in Frameworks */,
 				942A4F92192F202800C93E5B /* AudioToolbox.framework in Frameworks */,
@@ -129,6 +138,8 @@
 		942A4F47192F1C9600C93E5B = {
 			isa = PBXGroup;
 			children = (
+				94C727ED19373C0A00071093 /* DisplayMapAnnotation.h */,
+				94C727EE19373C0A00071093 /* DisplayMapAnnotation.m */,
 				942A4F59192F1C9700C93E5B /* tranGOut */,
 				942A4F7B192F1C9700C93E5B /* tranGOutTests */,
 				942A4F52192F1C9600C93E5B /* Frameworks */,
@@ -148,6 +159,7 @@
 		942A4F52192F1C9600C93E5B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				94D87EE419372B3E00E5D10F /* MapKit.framework */,
 				942A4FA8192F3A9200C93E5B /* FacebookSDK.framework */,
 				942A4FA3192F21C000C93E5B /* Parse.framework */,
 				942A4FA1192F208500C93E5B /* SystemConfiguration.framework */,
@@ -239,6 +251,8 @@
 				94EF2702192F4798000A6FEC /* EventControllerTVC.m */,
 				94EF2707192F486C000A6FEC /* CreateEventController.h */,
 				94EF2708192F486C000A6FEC /* CreateEventController.m */,
+				94D87EE1193722B900E5D10F /* ViewEventController.h */,
+				94D87EE2193722B900E5D10F /* ViewEventController.m */,
 			);
 			name = Events;
 			sourceTree = "<group>";
@@ -342,12 +356,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				942A4F6D192F1C9700C93E5B /* SignUpPageController.m in Sources */,
+				94D87EE3193722B900E5D10F /* ViewEventController.m in Sources */,
 				942A4F64192F1C9700C93E5B /* AppDelegate.m in Sources */,
 				94EF270F19305F9A000A6FEC /* SignInPageController.m in Sources */,
 				94EF2703192F4798000A6FEC /* EventControllerTVC.m in Sources */,
 				94EF2709192F486C000A6FEC /* CreateEventController.m in Sources */,
 				942A4F60192F1C9700C93E5B /* main.m in Sources */,
 				94EF270C19305F8A000A6FEC /* WelcomePageController.m in Sources */,
+				94C727EF19373C0A00071093 /* DisplayMapAnnotation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
