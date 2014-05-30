@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ModifyEventController.h"
+#import "AttributedStringCoderHelper.h"
 
-@interface CreateEventController : UIViewController
-@property (strong, nonatomic) UIDatePicker *datepicker;
-@property (strong, nonatomic) UIPopoverController *popOverForDatePicker;
+@interface CreateEventController : ModifyEventController
 @end

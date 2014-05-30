@@ -12,8 +12,10 @@
 
 @property (strong, nonatomic) NSString* eventTitle;
 @property (strong, nonatomic) NSString* eventLocation;
-@property (strong, nonatomic) NSString* eventInfo;
+@property (strong, nonatomic) NSAttributedString* eventInfo;
 @property (strong, nonatomic) NSString* eventStartTime;
 @property (strong, nonatomic) NSString* eventEndTime;
+@property (strong, nonatomic) NSString* eventID;
+@property BOOL hideEditor;
 
 @end

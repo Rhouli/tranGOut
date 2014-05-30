@@ -33,7 +33,14 @@
 		942A4FA2192F208500C93E5B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942A4FA1192F208500C93E5B /* SystemConfiguration.framework */; };
 		942A4FA4192F21C000C93E5B /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942A4FA3192F21C000C93E5B /* Parse.framework */; };
 		942A4FA9192F3A9200C93E5B /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942A4FA8192F3A9200C93E5B /* FacebookSDK.framework */; };
+		943BEC6F19384354003F2BFC /* EditEventController.m in Sources */ = {isa = PBXBuildFile; fileRef = 943BEC6E19384354003F2BFC /* EditEventController.m */; };
+		943BEC72193845CF003F2BFC /* ModifyEventController.m in Sources */ = {isa = PBXBuildFile; fileRef = 943BEC71193845CF003F2BFC /* ModifyEventController.m */; };
 		94C727EF19373C0A00071093 /* DisplayMapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 94C727EE19373C0A00071093 /* DisplayMapAnnotation.m */; };
+		94C88D4E1938572F006AF41F /* CurrentEventControllerTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 94C88D4D1938572F006AF41F /* CurrentEventControllerTVC.m */; };
+		94C88D5119385742006AF41F /* PastEventControllerTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 94C88D5019385742006AF41F /* PastEventControllerTVC.m */; };
+		94C88D5419385753006AF41F /* FutureEventControllerTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 94C88D5319385753006AF41F /* FutureEventControllerTVC.m */; };
+		94C88D5A19386A93006AF41F /* AttributedStringCoderHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 94C88D5919386A93006AF41F /* AttributedStringCoderHelper.m */; };
+		94C88D5F19386B11006AF41F /* FontUtility.c in Sources */ = {isa = PBXBuildFile; fileRef = 94C88D5E19386B11006AF41F /* FontUtility.c */; };
 		94D87EE3193722B900E5D10F /* ViewEventController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94D87EE2193722B900E5D10F /* ViewEventController.m */; };
 		94D87EE519372B3E00E5D10F /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94D87EE419372B3E00E5D10F /* MapKit.framework */; };
 		94EF2703192F4798000A6FEC /* EventControllerTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 94EF2702192F4798000A6FEC /* EventControllerTVC.m */; };
@@ -84,8 +91,22 @@
 		942A4FA1192F208500C93E5B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		942A4FA3192F21C000C93E5B /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		942A4FA8192F3A9200C93E5B /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../FacebookSDK/FacebookSDK.framework; sourceTree = "<group>"; };
-		94C727ED19373C0A00071093 /* DisplayMapAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DisplayMapAnnotation.h; path = tranGOut/DisplayMapAnnotation.h; sourceTree = "<group>"; };
-		94C727EE19373C0A00071093 /* DisplayMapAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DisplayMapAnnotation.m; path = tranGOut/DisplayMapAnnotation.m; sourceTree = "<group>"; };
+		943BEC6D19384354003F2BFC /* EditEventController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditEventController.h; sourceTree = "<group>"; };
+		943BEC6E19384354003F2BFC /* EditEventController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditEventController.m; sourceTree = "<group>"; };
+		943BEC70193845CF003F2BFC /* ModifyEventController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModifyEventController.h; sourceTree = "<group>"; };
+		943BEC71193845CF003F2BFC /* ModifyEventController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModifyEventController.m; sourceTree = "<group>"; };
+		94C727ED19373C0A00071093 /* DisplayMapAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DisplayMapAnnotation.h; sourceTree = "<group>"; };
+		94C727EE19373C0A00071093 /* DisplayMapAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DisplayMapAnnotation.m; sourceTree = "<group>"; };
+		94C88D4C1938572F006AF41F /* CurrentEventControllerTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CurrentEventControllerTVC.h; sourceTree = "<group>"; };
+		94C88D4D1938572F006AF41F /* CurrentEventControllerTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CurrentEventControllerTVC.m; sourceTree = "<group>"; };
+		94C88D4F19385741006AF41F /* PastEventControllerTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PastEventControllerTVC.h; sourceTree = "<group>"; };
+		94C88D5019385742006AF41F /* PastEventControllerTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PastEventControllerTVC.m; sourceTree = "<group>"; };
+		94C88D5219385753006AF41F /* FutureEventControllerTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FutureEventControllerTVC.h; sourceTree = "<group>"; };
+		94C88D5319385753006AF41F /* FutureEventControllerTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FutureEventControllerTVC.m; sourceTree = "<group>"; };
+		94C88D5819386A93006AF41F /* AttributedStringCoderHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttributedStringCoderHelper.h; sourceTree = "<group>"; };
+		94C88D5919386A93006AF41F /* AttributedStringCoderHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttributedStringCoderHelper.m; sourceTree = "<group>"; };
+		94C88D5E19386B11006AF41F /* FontUtility.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = FontUtility.c; path = ../FontUtility.c; sourceTree = "<group>"; };
+		94C88D6119386B3A006AF41F /* FontUtility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FontUtility.h; path = ../FontUtility.h; sourceTree = "<group>"; };
 		94D87EE1193722B900E5D10F /* ViewEventController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewEventController.h; sourceTree = "<group>"; };
 		94D87EE2193722B900E5D10F /* ViewEventController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewEventController.m; sourceTree = "<group>"; };
 		94D87EE419372B3E00E5D10F /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
@@ -138,8 +159,6 @@
 		942A4F47192F1C9600C93E5B = {
 			isa = PBXGroup;
 			children = (
-				94C727ED19373C0A00071093 /* DisplayMapAnnotation.h */,
-				94C727EE19373C0A00071093 /* DisplayMapAnnotation.m */,
 				942A4F59192F1C9700C93E5B /* tranGOut */,
 				942A4F7B192F1C9700C93E5B /* tranGOutTests */,
 				942A4F52192F1C9600C93E5B /* Frameworks */,
@@ -184,8 +203,8 @@
 			children = (
 				942A4F62192F1C9700C93E5B /* AppDelegate.h */,
 				942A4F63192F1C9700C93E5B /* AppDelegate.m */,
-				942A4F65192F1C9700C93E5B /* Main_iPhone.storyboard */,
-				942A4F68192F1C9700C93E5B /* Main_iPad.storyboard */,
+				94C88D6219386B9B006AF41F /* UtilityFunctions */,
+				94C88D6319386BD2006AF41F /* Views */,
 				94EF2704192F47A6000A6FEC /* Controllers */,
 				942A4F6E192F1C9700C93E5B /* Images.xcassets */,
 				942A4F5A192F1C9700C93E5B /* Supporting Files */,
@@ -222,6 +241,49 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		943BEC7419384AF6003F2BFC /* EventModifications */ = {
+			isa = PBXGroup;
+			children = (
+				94EF2707192F486C000A6FEC /* CreateEventController.h */,
+				94EF2708192F486C000A6FEC /* CreateEventController.m */,
+				943BEC6D19384354003F2BFC /* EditEventController.h */,
+				943BEC6E19384354003F2BFC /* EditEventController.m */,
+				943BEC70193845CF003F2BFC /* ModifyEventController.h */,
+				943BEC71193845CF003F2BFC /* ModifyEventController.m */,
+			);
+			name = EventModifications;
+			sourceTree = "<group>";
+		};
+		94C88D6219386B9B006AF41F /* UtilityFunctions */ = {
+			isa = PBXGroup;
+			children = (
+				94C88D6419386BE6006AF41F /* AttributedStringDatabase */,
+				94C727ED19373C0A00071093 /* DisplayMapAnnotation.h */,
+				94C727EE19373C0A00071093 /* DisplayMapAnnotation.m */,
+			);
+			name = UtilityFunctions;
+			sourceTree = "<group>";
+		};
+		94C88D6319386BD2006AF41F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				942A4F65192F1C9700C93E5B /* Main_iPhone.storyboard */,
+				942A4F68192F1C9700C93E5B /* Main_iPad.storyboard */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		94C88D6419386BE6006AF41F /* AttributedStringDatabase */ = {
+			isa = PBXGroup;
+			children = (
+				94C88D5819386A93006AF41F /* AttributedStringCoderHelper.h */,
+				94C88D5919386A93006AF41F /* AttributedStringCoderHelper.m */,
+				94C88D6119386B3A006AF41F /* FontUtility.h */,
+				94C88D5E19386B11006AF41F /* FontUtility.c */,
+			);
+			name = AttributedStringDatabase;
+			sourceTree = "<group>";
+		};
 		94EF2704192F47A6000A6FEC /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -247,12 +309,17 @@
 		94EF2706192F47B3000A6FEC /* Events */ = {
 			isa = PBXGroup;
 			children = (
+				94C88D4C1938572F006AF41F /* CurrentEventControllerTVC.h */,
+				94C88D4D1938572F006AF41F /* CurrentEventControllerTVC.m */,
+				94C88D5219385753006AF41F /* FutureEventControllerTVC.h */,
+				94C88D5319385753006AF41F /* FutureEventControllerTVC.m */,
+				94C88D4F19385741006AF41F /* PastEventControllerTVC.h */,
+				94C88D5019385742006AF41F /* PastEventControllerTVC.m */,
 				94EF2701192F4798000A6FEC /* EventControllerTVC.h */,
 				94EF2702192F4798000A6FEC /* EventControllerTVC.m */,
-				94EF2707192F486C000A6FEC /* CreateEventController.h */,
-				94EF2708192F486C000A6FEC /* CreateEventController.m */,
 				94D87EE1193722B900E5D10F /* ViewEventController.h */,
 				94D87EE2193722B900E5D10F /* ViewEventController.m */,
+				943BEC7419384AF6003F2BFC /* EventModifications */,
 			);
 			name = Events;
 			sourceTree = "<group>";
@@ -356,13 +423,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				942A4F6D192F1C9700C93E5B /* SignUpPageController.m in Sources */,
+				943BEC72193845CF003F2BFC /* ModifyEventController.m in Sources */,
 				94D87EE3193722B900E5D10F /* ViewEventController.m in Sources */,
+				94C88D5119385742006AF41F /* PastEventControllerTVC.m in Sources */,
+				94C88D5A19386A93006AF41F /* AttributedStringCoderHelper.m in Sources */,
 				942A4F64192F1C9700C93E5B /* AppDelegate.m in Sources */,
 				94EF270F19305F9A000A6FEC /* SignInPageController.m in Sources */,
 				94EF2703192F4798000A6FEC /* EventControllerTVC.m in Sources */,
 				94EF2709192F486C000A6FEC /* CreateEventController.m in Sources */,
 				942A4F60192F1C9700C93E5B /* main.m in Sources */,
+				94C88D5419385753006AF41F /* FutureEventControllerTVC.m in Sources */,
+				94C88D4E1938572F006AF41F /* CurrentEventControllerTVC.m in Sources */,
 				94EF270C19305F8A000A6FEC /* WelcomePageController.m in Sources */,
+				943BEC6F19384354003F2BFC /* EditEventController.m in Sources */,
+				94C88D5F19386B11006AF41F /* FontUtility.c in Sources */,
 				94C727EF19373C0A00071093 /* DisplayMapAnnotation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

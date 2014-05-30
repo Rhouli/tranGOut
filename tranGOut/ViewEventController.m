@@ -9,13 +9,15 @@
 #import <MapKit/MapKit.h>
 #import "ViewEventController.h"
 #import "DisplayMapAnnotation.h"
+#import "EditEventController.h"
 
-@interface ViewEventController () <MKMapViewDelegate>
-@property (weak, nonatomic) IBOutlet UILabel *locationLabel;
+@interface ViewEventController () <MKMapViewDelegate, UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *startTimeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *endTimeLabel;
 @property (weak, nonatomic) IBOutlet UITextView *infoScrollView;
 @property (weak, nonatomic) IBOutlet MKMapView *mapView;
+@property (weak, nonatomic) IBOutlet UIButton *editButton;
+@property (weak, nonatomic) IBOutlet UITextField *locationTextField;
 @property MKCoordinateRegion savedRegion;
 @property (strong, nonatomic) NSString* address;
 @end
@@ -25,14 +27,17 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationItem.title = self.eventTitle;
-    self.locationLabel.text = self.eventLocation;
+    self.locationTextField.delegate = self;
+    self.locationTextField.text = self.eventLocation;
     self.startTimeLabel.text = self.eventStartTime;
     self.endTimeLabel.text = self.eventEndTime;
 
-    self.infoScrollView.text = self.eventInfo;
+    self.infoScrollView.attributedText = self.eventInfo;
     self.infoScrollView.editable = NO;
-    NSArray* coordinates = [self geoCodeUsingAddress:self.eventLocation];
     
+    self.editButton.hidden = self.hideEditor;
+    
+    NSArray* coordinates = [self geoCodeUsingAddress:self.eventLocation];
     self.mapView.delegate = self;
     self.mapView.showsUserLocation = YES;
     self.mapView.zoomEnabled = YES;
@@ -63,10 +68,14 @@
     [[coordinates objectAtIndex:0] getValue:&center];
     annotationPoint.coordinate = center;
     annotationPoint.title = self.eventTitle;
-    annotationPoint.subtitle = self.address;
+    annotationPoint.subtitle = self.eventLocation; //self.address
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.mapView addAnnotation:annotationPoint];
     });
+}
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
+    return NO;
 }
 
 -(MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:
@@ -138,6 +147,30 @@
     self.address = fullAddress;
     
     return @[[NSValue valueWithMKCoordinate:center], [NSValue valueWithMKCoordinate:NEcenter], [NSValue valueWithMKCoordinate:SEcenter]];
+}
+
+#pragma mark - Navigation
+
+- (void)prepareImageViewController:(EditEventController *)ivc {
+    ivc.eventTitleString = self.eventTitle;
+    ivc.eventLocationString = self.eventLocation;
+    ivc.eventInfoString = self.eventInfo;
+    ivc.eventStartTimeDate = self.eventStartTime;
+    ivc.eventEndTimeDate = self.eventEndTime;
+    ivc.eventID = self.eventID;
+}
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+    if ([sender isKindOfClass:[UIButton class]]) {
+        if ([segue.identifier isEqualToString:@"edit_event"]) {
+            if ([segue.destinationViewController isKindOfClass:[EditEventController class]]) {
+                [self prepareImageViewController:segue.destinationViewController];
+            }
+        }
+    }
 }
 
 @end
