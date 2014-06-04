@@ -256,8 +256,8 @@
         
         sender.tag = 1;
         [sender setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [sender setBackgroundColor:[UIColor blackColor]];
-        [sender setTitle:@"Black" forState:UIControlStateNormal];
+        [sender setBackgroundColor:[UIColor whiteColor]];
+        [sender setTitle:@"White" forState:UIControlStateNormal];
     }
     [self resetFont];
 }
