@@ -8,17 +8,21 @@
 
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
+#import "colorUtility.h"
 
 @interface ModifyEventController : UIViewController
-@property (weak, nonatomic) IBOutlet UIButton *submitButton;
-@property (weak, nonatomic) IBOutlet UITextField *eventTitle;
-@property (weak, nonatomic) IBOutlet UITextField *eventLocation;
-@property (weak, nonatomic) IBOutlet UIButton *startTime;
-@property (weak, nonatomic) IBOutlet UIButton *endTime;
-@property (weak, nonatomic) IBOutlet UITextView *eventInfo;
-@property (weak, nonatomic) IBOutlet UIButton *boldFontButton;
-@property (weak, nonatomic) IBOutlet UIButton *italicFontButton;
-@property (weak, nonatomic) IBOutlet UIButton *greenColorButton;
-@property (weak, nonatomic) IBOutlet UIButton *blueColorButton;
-@property (weak, nonatomic) IBOutlet UIButton *redColorButton;
+@property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (strong, nonatomic) IBOutlet UIButton *addGuestButton;
+@property (strong, nonatomic) IBOutlet UIButton *submitButton;
+@property (strong, nonatomic) IBOutlet UITextField *eventTitle;
+@property (strong, nonatomic) IBOutlet UITextField *eventLocation;
+@property (strong, nonatomic) IBOutlet UIButton *startTime;
+@property (strong, nonatomic) IBOutlet UIButton *endTime;
+@property (strong, nonatomic) IBOutlet UITextView *eventInfo;
+@property (strong, nonatomic) IBOutlet UIButton *boldFontButton;
+@property (strong, nonatomic) IBOutlet UIButton *italicFontButton;
+@property (strong, nonatomic) IBOutlet UIButton *greenColorButton;
+@property (strong, nonatomic) IBOutlet UIButton *blueColorButton;
+@property (strong, nonatomic) IBOutlet UIButton *redColorButton;
+@property (strong, nonatomic) UIView *activeField;
 @end

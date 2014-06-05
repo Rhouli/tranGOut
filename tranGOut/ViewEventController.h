@@ -16,6 +16,10 @@
 @property (strong, nonatomic) NSString* eventStartTime;
 @property (strong, nonatomic) NSString* eventEndTime;
 @property (strong, nonatomic) NSString* eventID;
+@property (strong, nonatomic) UIScrollView* scrollView;
+@property (strong, nonatomic) IBOutlet UIButton *attendingButton;
+@property (strong, nonatomic) IBOutlet UIButton *postButton;
+@property (strong, nonatomic) IBOutlet UIButton *inviteButton;
 @property BOOL hideEditor;
 
 @end

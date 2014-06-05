@@ -35,6 +35,8 @@
 		942A4FA9192F3A9200C93E5B /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942A4FA8192F3A9200C93E5B /* FacebookSDK.framework */; };
 		943BEC6F19384354003F2BFC /* EditEventController.m in Sources */ = {isa = PBXBuildFile; fileRef = 943BEC6E19384354003F2BFC /* EditEventController.m */; };
 		943BEC72193845CF003F2BFC /* ModifyEventController.m in Sources */ = {isa = PBXBuildFile; fileRef = 943BEC71193845CF003F2BFC /* ModifyEventController.m */; };
+		94808D4A1940057000B0A26F /* colorUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 94808D491940057000B0A26F /* colorUtility.m */; };
+		948912FA1940751E003E98C0 /* EventPostsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 948912F91940751E003E98C0 /* EventPostsViewController.m */; };
 		94A3AFDE193E818C00FA4FF1 /* WelcomePageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94A3AFDD193E818C00FA4FF1 /* WelcomePageViewController.m */; };
 		94A3AFE2193E897C00FA4FF1 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94A3AFE1193E897C00FA4FF1 /* Social.framework */; };
 		94C727EF19373C0A00071093 /* DisplayMapAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 94C727EE19373C0A00071093 /* DisplayMapAnnotation.m */; };
@@ -95,6 +97,10 @@
 		943BEC6E19384354003F2BFC /* EditEventController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditEventController.m; sourceTree = "<group>"; };
 		943BEC70193845CF003F2BFC /* ModifyEventController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModifyEventController.h; sourceTree = "<group>"; };
 		943BEC71193845CF003F2BFC /* ModifyEventController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModifyEventController.m; sourceTree = "<group>"; };
+		94808D481940057000B0A26F /* colorUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = colorUtility.h; sourceTree = "<group>"; };
+		94808D491940057000B0A26F /* colorUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = colorUtility.m; sourceTree = "<group>"; };
+		948912F81940751E003E98C0 /* EventPostsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventPostsViewController.h; sourceTree = "<group>"; };
+		948912F91940751E003E98C0 /* EventPostsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventPostsViewController.m; sourceTree = "<group>"; };
 		94A3AFDC193E818C00FA4FF1 /* WelcomePageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomePageViewController.h; sourceTree = "<group>"; };
 		94A3AFDD193E818C00FA4FF1 /* WelcomePageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WelcomePageViewController.m; sourceTree = "<group>"; };
 		94A3AFE1193E897C00FA4FF1 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
@@ -257,9 +263,20 @@
 			name = EventModifications;
 			sourceTree = "<group>";
 		};
+		948912FB19407540003E98C0 /* EventAddons */ = {
+			isa = PBXGroup;
+			children = (
+				948912F81940751E003E98C0 /* EventPostsViewController.h */,
+				948912F91940751E003E98C0 /* EventPostsViewController.m */,
+			);
+			name = EventAddons;
+			sourceTree = "<group>";
+		};
 		94C88D6219386B9B006AF41F /* UtilityFunctions */ = {
 			isa = PBXGroup;
 			children = (
+				94808D481940057000B0A26F /* colorUtility.h */,
+				94808D491940057000B0A26F /* colorUtility.m */,
 				94C88D6419386BE6006AF41F /* AttributedStringDatabase */,
 				94C727ED19373C0A00071093 /* DisplayMapAnnotation.h */,
 				94C727EE19373C0A00071093 /* DisplayMapAnnotation.m */,
@@ -322,6 +339,7 @@
 				94D87EE1193722B900E5D10F /* ViewEventController.h */,
 				94D87EE2193722B900E5D10F /* ViewEventController.m */,
 				943BEC7419384AF6003F2BFC /* EventModifications */,
+				948912FB19407540003E98C0 /* EventAddons */,
 			);
 			name = Events;
 			sourceTree = "<group>";
@@ -424,6 +442,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				94808D4A1940057000B0A26F /* colorUtility.m in Sources */,
 				94A3AFDE193E818C00FA4FF1 /* WelcomePageViewController.m in Sources */,
 				942A4F6D192F1C9700C93E5B /* SignUpPageController.m in Sources */,
 				943BEC72193845CF003F2BFC /* ModifyEventController.m in Sources */,
@@ -440,6 +459,7 @@
 				943BEC6F19384354003F2BFC /* EditEventController.m in Sources */,
 				94C88D5F19386B11006AF41F /* FontUtility.c in Sources */,
 				94C727EF19373C0A00071093 /* DisplayMapAnnotation.m in Sources */,
+				948912FA1940751E003E98C0 /* EventPostsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -15,11 +15,15 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     self.eventTitle.text = self.eventTitleString;
     self.eventLocation.text = self.eventLocationString;
     [self.eventInfo setAttributedText:self.eventInfoString];
     [self.startTime setTitle:self.eventStartTimeDate forState:UIControlStateNormal];
     [self.endTime setTitle:self.eventEndTimeDate forState:UIControlStateNormal];
+
+    [self.submitButton setTitle:@"Edit Event" forState:UIControlStateNormal];
+    [self.submitButton addTarget:self action:@selector(editTheEvent:) forControlEvents: UIControlEventTouchUpInside];
 }
 
 - (IBAction)editTheEvent:(id)sender {

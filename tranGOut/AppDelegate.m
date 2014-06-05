@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import <Parse/Parse.h>
+#import "colorUtility.h"
 
 @implementation AppDelegate
 
@@ -20,9 +21,17 @@
     
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
+    [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTitleTextAttributes:
+     @{NSForegroundColorAttributeName:[colorUtility textColor],
+       NSFontAttributeName:[UIFont fontWithName:@"Futura" size:16]}
+                                                                                            forState:UIControlStateNormal];
+    
+    [[UINavigationBar appearanceWhenContainedIn:[UINavigationController class], nil] setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
+                                                           [colorUtility textColor], NSForegroundColorAttributeName,
+                                                                      [UIFont fontWithName:@"Futura" size:18.0], NSFontAttributeName, nil]];
     return YES;
 }
-							
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

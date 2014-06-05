@@ -17,6 +17,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [self.submitButton setTitle:@"Create Event" forState:UIControlStateNormal];
+    [self.submitButton addTarget:self action:@selector(createAnEvent:) forControlEvents: UIControlEventTouchUpInside];
 }
 
 - (IBAction)createAnEvent:(id)sender {
