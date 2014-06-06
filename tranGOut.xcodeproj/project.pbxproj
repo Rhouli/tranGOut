@@ -15,7 +15,6 @@
 		942A4F64192F1C9700C93E5B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 942A4F63192F1C9700C93E5B /* AppDelegate.m */; };
 		942A4F67192F1C9700C93E5B /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 942A4F65192F1C9700C93E5B /* Main_iPhone.storyboard */; };
 		942A4F6A192F1C9700C93E5B /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 942A4F68192F1C9700C93E5B /* Main_iPad.storyboard */; };
-		942A4F6D192F1C9700C93E5B /* SignUpPageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 942A4F6C192F1C9700C93E5B /* SignUpPageController.m */; };
 		942A4F6F192F1C9700C93E5B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 942A4F6E192F1C9700C93E5B /* Images.xcassets */; };
 		942A4F76192F1C9700C93E5B /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942A4F75192F1C9700C93E5B /* XCTest.framework */; };
 		942A4F77192F1C9700C93E5B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 942A4F53192F1C9600C93E5B /* Foundation.framework */; };
@@ -45,11 +44,11 @@
 		94C88D5419385753006AF41F /* FutureEventControllerTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 94C88D5319385753006AF41F /* FutureEventControllerTVC.m */; };
 		94C88D5A19386A93006AF41F /* AttributedStringCoderHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 94C88D5919386A93006AF41F /* AttributedStringCoderHelper.m */; };
 		94C88D5F19386B11006AF41F /* FontUtility.c in Sources */ = {isa = PBXBuildFile; fileRef = 94C88D5E19386B11006AF41F /* FontUtility.c */; };
+		94CC27F419416FD600A4C5D4 /* addGuestsControllerTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 94CC27F319416FD600A4C5D4 /* addGuestsControllerTVC.m */; };
 		94D87EE3193722B900E5D10F /* ViewEventController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94D87EE2193722B900E5D10F /* ViewEventController.m */; };
 		94D87EE519372B3E00E5D10F /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94D87EE419372B3E00E5D10F /* MapKit.framework */; };
 		94EF2703192F4798000A6FEC /* EventControllerTVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 94EF2702192F4798000A6FEC /* EventControllerTVC.m */; };
 		94EF2709192F486C000A6FEC /* CreateEventController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94EF2708192F486C000A6FEC /* CreateEventController.m */; };
-		94EF270F19305F9A000A6FEC /* SignInPageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 94EF270E19305F9A000A6FEC /* SignInPageController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,7 +74,6 @@
 		942A4F63192F1C9700C93E5B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		942A4F66192F1C9700C93E5B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
 		942A4F69192F1C9700C93E5B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
-		942A4F6C192F1C9700C93E5B /* SignUpPageController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SignUpPageController.m; sourceTree = "<group>"; };
 		942A4F6E192F1C9700C93E5B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		942A4F74192F1C9700C93E5B /* tranGOutTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = tranGOutTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		942A4F75192F1C9700C93E5B /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -116,6 +114,8 @@
 		94C88D5919386A93006AF41F /* AttributedStringCoderHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttributedStringCoderHelper.m; sourceTree = "<group>"; };
 		94C88D5E19386B11006AF41F /* FontUtility.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = FontUtility.c; path = ../FontUtility.c; sourceTree = "<group>"; };
 		94C88D6119386B3A006AF41F /* FontUtility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FontUtility.h; path = ../FontUtility.h; sourceTree = "<group>"; };
+		94CC27F219416FD600A4C5D4 /* addGuestsControllerTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = addGuestsControllerTVC.h; sourceTree = "<group>"; };
+		94CC27F319416FD600A4C5D4 /* addGuestsControllerTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = addGuestsControllerTVC.m; sourceTree = "<group>"; };
 		94D87EE1193722B900E5D10F /* ViewEventController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewEventController.h; sourceTree = "<group>"; };
 		94D87EE2193722B900E5D10F /* ViewEventController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewEventController.m; sourceTree = "<group>"; };
 		94D87EE419372B3E00E5D10F /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
@@ -123,8 +123,6 @@
 		94EF2702192F4798000A6FEC /* EventControllerTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EventControllerTVC.m; sourceTree = "<group>"; };
 		94EF2707192F486C000A6FEC /* CreateEventController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateEventController.h; sourceTree = "<group>"; };
 		94EF2708192F486C000A6FEC /* CreateEventController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateEventController.m; sourceTree = "<group>"; };
-		94EF270D19305F9A000A6FEC /* SignInPageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignInPageController.h; sourceTree = "<group>"; };
-		94EF270E19305F9A000A6FEC /* SignInPageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignInPageController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -266,6 +264,8 @@
 		948912FB19407540003E98C0 /* EventAddons */ = {
 			isa = PBXGroup;
 			children = (
+				94CC27F219416FD600A4C5D4 /* addGuestsControllerTVC.h */,
+				94CC27F319416FD600A4C5D4 /* addGuestsControllerTVC.m */,
 				948912F81940751E003E98C0 /* EventPostsViewController.h */,
 				948912F91940751E003E98C0 /* EventPostsViewController.m */,
 			);
@@ -318,9 +318,6 @@
 			children = (
 				94A3AFDC193E818C00FA4FF1 /* WelcomePageViewController.h */,
 				94A3AFDD193E818C00FA4FF1 /* WelcomePageViewController.m */,
-				942A4F6C192F1C9700C93E5B /* SignUpPageController.m */,
-				94EF270D19305F9A000A6FEC /* SignInPageController.h */,
-				94EF270E19305F9A000A6FEC /* SignInPageController.m */,
 			);
 			name = Login;
 			sourceTree = "<group>";
@@ -444,13 +441,11 @@
 			files = (
 				94808D4A1940057000B0A26F /* colorUtility.m in Sources */,
 				94A3AFDE193E818C00FA4FF1 /* WelcomePageViewController.m in Sources */,
-				942A4F6D192F1C9700C93E5B /* SignUpPageController.m in Sources */,
 				943BEC72193845CF003F2BFC /* ModifyEventController.m in Sources */,
 				94D87EE3193722B900E5D10F /* ViewEventController.m in Sources */,
 				94C88D5119385742006AF41F /* PastEventControllerTVC.m in Sources */,
 				94C88D5A19386A93006AF41F /* AttributedStringCoderHelper.m in Sources */,
 				942A4F64192F1C9700C93E5B /* AppDelegate.m in Sources */,
-				94EF270F19305F9A000A6FEC /* SignInPageController.m in Sources */,
 				94EF2703192F4798000A6FEC /* EventControllerTVC.m in Sources */,
 				94EF2709192F486C000A6FEC /* CreateEventController.m in Sources */,
 				942A4F60192F1C9700C93E5B /* main.m in Sources */,
@@ -458,6 +453,7 @@
 				94C88D4E1938572F006AF41F /* CurrentEventControllerTVC.m in Sources */,
 				943BEC6F19384354003F2BFC /* EditEventController.m in Sources */,
 				94C88D5F19386B11006AF41F /* FontUtility.c in Sources */,
+				94CC27F419416FD600A4C5D4 /* addGuestsControllerTVC.m in Sources */,
 				94C727EF19373C0A00071093 /* DisplayMapAnnotation.m in Sources */,
 				948912FA1940751E003E98C0 /* EventPostsViewController.m in Sources */,
 			);

@@ -42,13 +42,16 @@
     
     self.eventTitle = [[UITextField alloc] initWithFrame:eventTitleRect];
     self.eventTitle.borderStyle = UITextBorderStyleRoundedRect;
-    [self.eventTitle setBackgroundColor:[colorUtility opaqueLabelColor]];
+    [self.eventTitle setBackgroundColor:[colorUtility opaqueWhiteColor]];
     [self changePlaceholderText:self.eventTitle withString:@"Title"];
+    [self.eventTitle setValue:[UIColor lightGrayColor] forKeyPath:@"_placeholderLabel.textColor"];
     self.eventTitle.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
     self.eventTitle.textAlignment = NSTextAlignmentCenter;
-    [self.eventTitle setTextColor:[UIColor whiteColor]];
+    [self.eventTitle setTextColor:[UIColor blackColor]];
     self.eventTitle.layer.cornerRadius = CORNERRADIUS;
-    
+    [[self.eventTitle layer] setBorderWidth:2.0f];
+    [[self.eventTitle layer] setBorderColor:[colorUtility darkLabelColor].CGColor];
+
     // Location Title
     CGPoint eventLocationPoint = CGPointMake(eventTitlePoint.x, eventTitlePoint.y + eventTitleSize.height + LABELSPACING);
     CGSize eventLocationSize = CGSizeMake(maxLabelWidth, standardLabelHeight);
@@ -56,13 +59,16 @@
     
     self.eventLocation = [[UITextField alloc] initWithFrame:eventLocationRect];
     self.eventLocation.borderStyle = UITextBorderStyleRoundedRect;
-    [self.eventLocation setBackgroundColor:[colorUtility opaqueLabelColor]];
+    [self.eventLocation setBackgroundColor:[colorUtility opaqueWhiteColor]];
     [self changePlaceholderText:self.eventLocation withString:@"Location"];
+    [self.eventLocation setValue:[UIColor lightGrayColor] forKeyPath:@"_placeholderLabel.textColor"];
     self.eventLocation.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
     self.eventLocation.textAlignment = NSTextAlignmentCenter;
-    [self.eventLocation setTextColor:[UIColor whiteColor]];
+    [self.eventLocation setTextColor:[UIColor blackColor]];
     self.eventLocation.layer.cornerRadius = CORNERRADIUS;
-    
+    [[self.eventLocation layer] setBorderWidth:2.0f];
+    [[self.eventLocation layer] setBorderColor:[colorUtility darkLabelColor].CGColor];
+
     // From Text Label
     CGSize fromLabelSize = CGSizeMake(eventLocationSize.width/2.0-SIDESPACING/2, eventLocationSize.height/2.0);
     CGPoint fromLabelPoint = CGPointMake(eventLocationPoint.x, eventLocationPoint.y + eventLocationSize.height + LABELSPACING);
@@ -93,12 +99,14 @@
     self.startTime = [[UIButton alloc] initWithFrame:startTimeRect];
     self.startTime.layer.cornerRadius = CORNERRADIUS;
     self.startTime.clipsToBounds = YES;
-    [self.startTime setBackgroundColor:[colorUtility opaqueLabelColor]];
+    [self.startTime setBackgroundColor:[colorUtility opaqueWhiteColor]];
     self.startTime.titleLabel.textAlignment = NSTextAlignmentCenter;
-    [self.startTime setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.startTime setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [self.startTime setUserInteractionEnabled:YES];
     [self.startTime addTarget:self action:@selector(showDatePicker:) forControlEvents: UIControlEventTouchUpInside];
-    
+    [[self.startTime layer] setBorderWidth:2.0f];
+    [[self.startTime layer] setBorderColor:[colorUtility darkLabelColor].CGColor];
+
     // end time input label
     CGPoint endTimePoint = CGPointMake(toLabelPoint.x, toLabelPoint.y+toLabelSize.height+1);
     CGSize endTimeSize = startTimeSize;
@@ -107,12 +115,14 @@
     self.endTime = [[UIButton alloc] initWithFrame:endTimeRect];
     self.endTime.layer.cornerRadius = CORNERRADIUS;
     self.endTime.clipsToBounds = YES;
-    [self.endTime setBackgroundColor:[colorUtility opaqueLabelColor]];
+    [self.endTime setBackgroundColor:[colorUtility opaqueWhiteColor]];
     self.endTime.titleLabel.textAlignment = NSTextAlignmentCenter;
-    [self.endTime setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.endTime setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [self.endTime setUserInteractionEnabled:YES];
     [self.endTime addTarget:self action:@selector(showDatePicker:) forControlEvents: UIControlEventTouchUpInside];
-    
+    [[self.endTime layer] setBorderWidth:2.0f];
+    [[self.endTime layer] setBorderColor:[colorUtility darkLabelColor].CGColor];
+
     // add event info
     CGPoint eventInfoPoint = CGPointMake(startTimePoint.x, startTimePoint.y+startTimeSize.height+LABELSPACING);
     CGSize eventInfoSize = CGSizeMake(maxLabelWidth, maxLabelWidth/2.0);
@@ -164,7 +174,7 @@
     self.addGuestButton = [[UIButton alloc] initWithFrame:addGuestButtonRect];
     self.addGuestButton.layer.cornerRadius = CORNERRADIUS;
     self.addGuestButton.clipsToBounds = YES;
-    [self.addGuestButton setBackgroundColor:[colorUtility backgroundColor]];
+    [self.addGuestButton setBackgroundColor:[colorUtility opaqueWhiteColor]];
     self.addGuestButton.titleLabel.textAlignment = NSTextAlignmentCenter;
     [self.addGuestButton setTitleColor:[colorUtility textColor] forState:UIControlStateNormal];
     [self.addGuestButton setTitle:@"Invite Guests" forState:UIControlStateNormal];
@@ -226,6 +236,7 @@
 -(IBAction)showDatePicker:(id)sender{
     // hide keyboard and button
     self.submitButton.hidden = YES;
+    self.addGuestButton.hidden  = YES;
     [self.view endEditing:YES];
     
     // mark which button it is for later
@@ -312,6 +323,7 @@
     [[self.view viewWithTag:10] removeFromSuperview];
     [[self.view viewWithTag:11] removeFromSuperview];
     self.submitButton.hidden = NO;
+    self.addGuestButton.hidden = NO;
 }
 
 - (void)dismissDatePicker:(id)sender {
@@ -362,24 +374,6 @@
     [self.view endEditing:YES];
     //[self.datePicker removeFromSuperview];
 }
-
-/*
-- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
-    [textField resignFirstResponder];
-    UIDatePicker *datePicker = [[UIDatePicker alloc]initWithFrame:textField.frame];
-    datePicker.datePickerMode = UIDatePickerModeTime;
-    [datePicker addTarget:self action:@selector(changeTextFieldValue:) forControlEvents:UIControlEventValueChanged];
-    [self.view addSubview:datePicker];
-    
-    return YES;
-}
--(void)changeTextFieldValue:(id)sender {
-    NSDate *date = [sender date];
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
-    [dateFormatter setDateFormat:@"hh-mm"];
-    NSString *dateString = [dateFormatter stringFromDate:date ];
-    self.eventTitle.text = dateString;
-} */
 
 -(void)LabelChange:(id)sender {
     NSDateFormatter *df = [[NSDateFormatter alloc]init];
