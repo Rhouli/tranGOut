@@ -14,20 +14,30 @@
 #import "EditEventController.h"
 #import "EventPostsViewController.h"
 #import "AddGuestsControllerTVC.h"
+#import "ViewAcceptedGuestsControllerTVC.h"
+#import "ViewMaybeGuestsControllerTVC.h"
+#import "ViewUndecidedGuestsControllerTVC.h"
 
 @interface ViewEventController () <MKMapViewDelegate>
-@property (strong, nonatomic) IBOutlet UILabel *startTimeLabel;
-@property (strong, nonatomic) IBOutlet UILabel *endTimeLabel;
-@property (strong, nonatomic) IBOutlet UITextView *eventInfoView;
-@property (strong, nonatomic) IBOutlet MKMapView *mapView;
-@property (strong, nonatomic) IBOutlet UIButton *editButton;
-@property (strong, nonatomic) IBOutlet UILabel *locationLabel;
+@property (strong, nonatomic) UILabel *startTimeLabel;
+@property (strong, nonatomic) UILabel *endTimeLabel;
+@property (strong, nonatomic) UITextView *eventInfoView;
+@property (strong, nonatomic) MKMapView *mapView;
+@property (weak, nonatomic) IBOutlet UIButton *editButton;
+@property (strong, nonatomic) UILabel *locationLabel;
+@property (strong, nonatomic) UIButton *guestAttendingButton;
+@property (strong, nonatomic) UIButton *guestMaybeButton;
+@property (strong, nonatomic) UIButton *guestUndecidedButton;
+@property (strong, nonatomic) NSString* attendingStatusOld;
+@property (strong, nonatomic) UIView* topBarView;
 @property MKCoordinateRegion savedRegion;
 @property (strong, nonatomic) NSString* address;
 @property (strong, nonatomic) UIActivityIndicatorView *spinner;
 @end
 
 @implementation ViewEventController
+
+#pragma mark UIViewControllers
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -37,80 +47,87 @@
     [self createScrollViewContents];
     self.editButton.hidden = self.hideEditor;
     self.navigationItem.title = self.eventTitle;
+    self.view.backgroundColor = [colorAndFontUtility backgroundColor];
+    if(![[PFUser currentUser].objectId isEqual:self.eventCreator.objectId]){
+        self.editButton.userInteractionEnabled = NO;
+    }
 }
+
+- (void)viewWillAppear:(BOOL)animated {
+    self.tabBarController.tabBar.hidden=YES;
+    
+    PFQuery *query = [PFQuery queryWithClassName:@"Event"];
+    [query whereKey:@"objectId" equalTo:self.eventID];
+    // Retrieve the object by id
+    [query getObjectInBackgroundWithId:self.eventID block:^(PFObject *event, NSError *error) {
+        self.event = event;
+        self.acceptedGuests = self.event[@"acceptedGuests"];
+        self.maybeGuests = self.event[@"maybeGuests"];
+        self.undecidedGuests = self.event[@"undecidedGuests"];
+        [self setGuestInfoButtonTitles];
+    }];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    self.tabBarController.tabBar.hidden=NO;
+}
+
+#pragma mark CreateView
 
 - (void)createTopBar {
     const float maxLabelWidth = (1-2*INPUTBOXWIDTHOFFSETPERCENT)*self.view.frame.size.width;
     const float standardLabelHeight = maxLabelWidth/10.0;
     const float viewHeaderHeight = self.navigationController.navigationBar.frame.size.height + [[UIApplication sharedApplication] statusBarFrame].size.height;
-    // create control labels
-    // attending Button
-    CGPoint attendingButtonPoint = CGPointMake(1,viewHeaderHeight+LABELSPACING/2);
-    CGSize attendingButtonSize = CGSizeMake(self.view.frame.size.width/3-2,standardLabelHeight);
-    CGRect attendingButtonRect = {attendingButtonPoint, attendingButtonSize};
-    
+
+    CGPoint attendingButtonPoint = CGPointMake(1,LABELSPACING/2);
+    CGSize buttonSize = CGSizeMake(self.view.frame.size.width/3-2,standardLabelHeight);
+    CGRect attendingButtonRect = {attendingButtonPoint, buttonSize};
+    CGPoint postButtonPoint = CGPointMake(attendingButtonPoint.x+buttonSize.width+2,attendingButtonPoint.y);
+    CGRect postButtonRect = {postButtonPoint, buttonSize};
+    CGPoint inviteButtonPoint = CGPointMake(postButtonPoint.x+buttonSize.width+2, postButtonPoint.y);
+    CGRect inviteButtonRect = {inviteButtonPoint, buttonSize};
+
     self.attendingButton = [[UIButton alloc] initWithFrame:attendingButtonRect];
-    [self.attendingButton setBackgroundColor:[colorUtility buttonColor]];
-    self.attendingButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-    [self.attendingButton setTitleColor:[colorUtility textMatchingBackgroundColor] forState:UIControlStateNormal];
-    [self getAttendingStatus];
-    self.attendingButton.titleLabel.font  = [UIFont fontWithName:@"Futura" size:16];
-    [[self.attendingButton layer] setBorderWidth:2.0f];
-    [[self.attendingButton layer] setBorderColor:[colorUtility buttonColor].CGColor];
-    self.attendingButton.layer.cornerRadius = CORNERRADIUS;
-    self.attendingButton.clipsToBounds = YES;
-    [self.attendingButton setUserInteractionEnabled:YES];
-    [self.attendingButton addTarget:self action:@selector(attendingButtonTap:) forControlEvents: UIControlEventTouchUpInside];
-    
-    // post button
-    CGPoint postButtonPoint = CGPointMake(attendingButtonPoint.x+attendingButtonSize.width+2,attendingButtonPoint.y);
-    CGSize postButtonSize = attendingButtonSize;
-    CGRect postButtonRect = {postButtonPoint, postButtonSize};
-    
     self.postButton = [[UIButton alloc] initWithFrame:postButtonRect];
-    [self.postButton setBackgroundColor:[colorUtility buttonColor]];
-    self.postButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-    [self.postButton setTitleColor:[colorUtility textMatchingBackgroundColor] forState:UIControlStateNormal];
-    [self.postButton setTitle:@"Post" forState:UIControlStateNormal];
-    self.postButton.titleLabel.font  = [UIFont fontWithName:@"Futura" size:16];
-    [[self.postButton layer] setBorderWidth:2.0f];
-    [[self.postButton layer] setBorderColor:[colorUtility buttonColor].CGColor];
-    self.postButton.layer.cornerRadius = CORNERRADIUS;
-    self.postButton.clipsToBounds = YES;
-    [self.postButton setUserInteractionEnabled:YES];
-    [self.postButton addTarget:self action:@selector(postButtonTap:) forControlEvents: UIControlEventTouchUpInside];
-    
-    // invite button
-    CGPoint inviteButtonPoint = CGPointMake(postButtonPoint.x+postButtonSize.width+2, postButtonPoint.y);
-    CGSize inviteButtonSize = postButtonSize;
-    CGRect inviteButtonRect = {inviteButtonPoint, inviteButtonSize};
-    
     self.inviteButton = [[UIButton alloc] initWithFrame:inviteButtonRect];
-    [self.inviteButton setBackgroundColor:[colorUtility buttonColor]];
-    self.inviteButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-    [self.inviteButton setTitleColor:[colorUtility textMatchingBackgroundColor] forState:UIControlStateNormal];
-    [self.inviteButton setTitle:@"Invite" forState:UIControlStateNormal];
-    self.inviteButton.titleLabel.font  = [UIFont fontWithName:@"Futura" size:16];
-    [[self.inviteButton layer] setBorderWidth:2.0f];
-    [[self.inviteButton layer] setBorderColor:[colorUtility buttonColor].CGColor];
-    self.inviteButton.layer.cornerRadius = CORNERRADIUS;
-    self.inviteButton.clipsToBounds = YES;
-    [self.inviteButton setUserInteractionEnabled:YES];
-    [self.inviteButton addTarget:self action:@selector(inviteButtonTap:) forControlEvents: UIControlEventTouchUpInside];
     
-    [self.view addSubview:self.attendingButton];
-    [self.view addSubview:self.postButton];
-    [self.view addSubview:self.inviteButton];
+    [self getAttendingStatus];
+    [self.postButton setTitle:@"Post" forState:UIControlStateNormal];
+    [self.inviteButton setTitle:@"Invite" forState:UIControlStateNormal];
+    
+    [colorAndFontUtility buttonStyleTwo:self.attendingButton withRoundEdges:NO];
+    [colorAndFontUtility buttonStyleOne:self.postButton withRoundEdges:NO];
+    [colorAndFontUtility buttonStyleTwo:self.inviteButton withRoundEdges:NO];
+    
+    [self.attendingButton addTarget:self action:@selector(attendingButtonTap:) forControlEvents: UIControlEventTouchUpInside];
+    [self.postButton addTarget:self action:@selector(postButtonTap:) forControlEvents: UIControlEventTouchUpInside];
+    [self.inviteButton addTarget:self action:@selector(inviteButtonTap:) forControlEvents: UIControlEventTouchUpInside];
+
+    if(![[PFUser currentUser].objectId isEqual:self.eventCreator.objectId] || self.blockInvite){
+        self.inviteButton.userInteractionEnabled = NO;
+    }
+    
+    self.topBarView = [[UIView alloc] initWithFrame:CGRectMake(0, viewHeaderHeight, self.view.frame.size.width, buttonSize.height+LABELSPACING)];
+    [self.topBarView setBackgroundColor:[colorAndFontUtility opaqueWhiteColor]];
+    
+    [self.topBarView addSubview:self.attendingButton];
+    [self.topBarView addSubview:self.postButton];
+    [self.topBarView addSubview:self.inviteButton];
+    
+    [self.view addSubview:self.topBarView];
 }
+
 - (void)createScrollView {
-    CGPoint scrollViewPoint = CGPointMake(0, LABELSPACING/2+self.inviteButton.frame.size.height+self.inviteButton.frame.origin.y);
-    CGSize scrollViewSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height-scrollViewPoint.y-self.inviteButton.frame.size.height);//inviteButtonPoint.y);
+    CGPoint scrollViewPoint = CGPointMake(0, self.topBarView.frame.size.height+self.topBarView.frame.origin.y);
+    CGSize scrollViewSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height-scrollViewPoint.y);
     CGRect scrollViewRect = {scrollViewPoint, scrollViewSize};
+    
     self.scrollView = [[UIScrollView alloc] initWithFrame:scrollViewRect];
     self.scrollView.scrollEnabled = YES;
     
     [self.view addSubview:self.scrollView];
 }
+
 - (void)createScrollViewContents {
     const float maxLabelWidth = (1-2*INPUTBOXWIDTHOFFSETPERCENT)*self.view.frame.size.width;
     const float standardLabelHeight = maxLabelWidth/10.0;
@@ -131,81 +148,80 @@
     CGRect locationLabelRect = {locationLabelPoint, locationLabelSize};
     
     self.locationLabel = [[UILabel alloc] initWithFrame:locationLabelRect];
-    [self.locationLabel setBackgroundColor:[colorUtility opaqueWhiteColor]];
-    self.locationLabel.textAlignment = NSTextAlignmentCenter;
-    [self.locationLabel setTextColor:[UIColor blackColor]];
-    self.locationLabel.layer.cornerRadius = CORNERRADIUS;
-    self.locationLabel.clipsToBounds = YES;
+    [colorAndFontUtility buttonStyleThree:self.locationLabel withRoundEdges:YES];
     self.locationLabel.text = self.eventLocation;
-    [[self.locationLabel layer] setBorderWidth:2.0f];
-    [[self.locationLabel layer] setBorderColor:[colorUtility darkLabelColor].CGColor];
     
-    // From Text Label
+    // From and To Text Label
     CGSize fromLabelSize = CGSizeMake(locationLabelSize.width/2.0-SIDESPACING/2, locationLabelSize.height/2.0);
     CGPoint fromLabelPoint = CGPointMake(locationLabelPoint.x, locationLabelPoint.y + locationLabelSize.height + LABELSPACING);
     CGRect fromLabelRect = {fromLabelPoint, fromLabelSize};
-    
-    UILabel *fromLabel = [[UILabel alloc] initWithFrame:fromLabelRect];
-    [fromLabel setText:@"From"];
-    [fromLabel setTextColor:[colorUtility textColor]];
-    [fromLabel setTextAlignment:NSTextAlignmentCenter];
-    fromLabel.font = [fromLabel.font fontWithSize:12];
-    
-    // To Text Label
     CGSize toLabelSize = fromLabelSize;
     CGPoint toLabelPoint = CGPointMake(fromLabelPoint.x+fromLabelSize.width+SIDESPACING, fromLabelPoint.y);
     CGRect toLabelRect = {toLabelPoint, toLabelSize};
     
+    UILabel *fromLabel = [[UILabel alloc] initWithFrame:fromLabelRect];
     UILabel *toLabel = [[UILabel alloc] initWithFrame:toLabelRect];
+    
+    [fromLabel setText:@"From"];
+    [fromLabel setTextColor:[colorAndFontUtility textColor]];
+    [fromLabel setTextAlignment:NSTextAlignmentCenter];
+    fromLabel.font = FUTURA_SMALL_FONT;
+   
     [toLabel setText:@"To"];
-    [toLabel setTextColor:[colorUtility textColor]];
+    [toLabel setTextColor:[colorAndFontUtility textColor]];
     [toLabel setTextAlignment:NSTextAlignmentCenter];
-    toLabel.font = [toLabel.font fontWithSize:12];
+    toLabel.font = FUTURA_SMALL_FONT;
     
-    // Start time input label
+    // Start and end time input label
     CGPoint startTimeLabelPoint = CGPointMake(fromLabelPoint.x, fromLabelPoint.y+fromLabelSize.height+1);
-    CGSize startTimeLabelSize = CGSizeMake(fromLabelSize.width, standardLabelHeight);
-    CGRect startTimeLabelRect = {startTimeLabelPoint, startTimeLabelSize};
-    
-    self.startTimeLabel = [[UILabel alloc] initWithFrame:startTimeLabelRect];
-    self.startTimeLabel.layer.cornerRadius = CORNERRADIUS;
-    self.startTimeLabel.clipsToBounds = YES;
-    [self.startTimeLabel setBackgroundColor:[colorUtility opaqueWhiteColor]];
-    self.startTimeLabel.textAlignment = NSTextAlignmentCenter;
-    [self.startTimeLabel setTextColor:[UIColor blackColor]];
-    self.startTimeLabel.text = self.eventStartTime;
-    [[self.startTimeLabel layer] setBorderWidth:2.0f];
-    [[self.startTimeLabel layer] setBorderColor:[colorUtility darkLabelColor].CGColor];
-
-    // end time input label
+    CGSize timeLabelSize = CGSizeMake(fromLabelSize.width, standardLabelHeight);
+    CGRect startTimeLabelRect = {startTimeLabelPoint, timeLabelSize};
     CGPoint endTimeLabelPoint = CGPointMake(toLabelPoint.x, toLabelPoint.y+toLabelSize.height+1);
-    CGSize endTimeLabelSize = startTimeLabelSize;
-    CGRect endTimeLabelRect = {endTimeLabelPoint, endTimeLabelSize};
-    
+    CGRect endTimeLabelRect = {endTimeLabelPoint, timeLabelSize};
+
+    self.startTimeLabel = [[UILabel alloc] initWithFrame:startTimeLabelRect];
     self.endTimeLabel = [[UILabel alloc] initWithFrame:endTimeLabelRect];
-    self.endTimeLabel.layer.cornerRadius = CORNERRADIUS;
-    self.endTimeLabel.clipsToBounds = YES;
-    [self.endTimeLabel setBackgroundColor:[colorUtility opaqueWhiteColor]];
-    self.endTimeLabel.textAlignment = NSTextAlignmentCenter;
-    [self.endTimeLabel setTextColor:[UIColor blackColor]];
+    
+    [colorAndFontUtility buttonStyleThree:self.startTimeLabel withRoundEdges:NO];
+    self.startTimeLabel.text = self.eventStartTime;
+    [colorAndFontUtility buttonStyleThree:self.endTimeLabel withRoundEdges:NO];
     self.endTimeLabel.text = self.eventEndTime;
-    [[self.endTimeLabel layer] setBorderWidth:2.0f];
-    [[self.endTimeLabel layer] setBorderColor:[colorUtility darkLabelColor].CGColor];
 
     // add event info
-    CGPoint eventInfoViewPoint = CGPointMake(startTimeLabelPoint.x, startTimeLabelPoint.y+startTimeLabelSize.height+LABELSPACING);
-    CGSize eventInfoViewSize = CGSizeMake(maxLabelWidth, maxLabelWidth/2.0);
+    CGPoint eventInfoViewPoint = CGPointMake(startTimeLabelPoint.x, startTimeLabelPoint.y+timeLabelSize.height+LABELSPACING);
+    CGSize eventInfoViewSize = CGSizeMake(locationLabelSize.width, maxLabelWidth/2.0);
     CGRect eventInfoViewRect = {eventInfoViewPoint, eventInfoViewSize};
     
     self.eventInfoView = [[UITextView alloc] initWithFrame:eventInfoViewRect];
-    [self.eventInfoView setBackgroundColor:[colorUtility textFieldColor]];
-    self.eventInfoView.textColor = [colorUtility opaqueWhiteColor];
-    self.eventInfoView.layer.cornerRadius = CORNERRADIUS;
+    [colorAndFontUtility buttonStyleFour:self.eventInfoView withRoundEdges:YES];
     [self.eventInfoView setUserInteractionEnabled:NO];
     self.eventInfoView.editable = NO;
     [self.eventInfoView scrollRectToVisible:eventInfoViewRect animated:NO];
     [self.eventInfoView setAttributedText:self.eventInfo];
     
+    // Guest status buttons
+    
+    CGSize guestButtonSize = CGSizeMake(locationLabelSize.width, standardLabelHeight);
+    CGPoint guestAttendingButtonPoint = CGPointMake(eventInfoViewPoint.x, eventInfoViewPoint.y+eventInfoViewSize.height+LABELSPACING*2);
+    CGRect guestAttendingButtonRect = {guestAttendingButtonPoint, guestButtonSize};
+    CGPoint guestMaybeButtonPoint = CGPointMake(guestAttendingButtonPoint.x, guestAttendingButtonPoint.y+guestButtonSize.height+2);
+    CGRect guestMaybeButtonRect = {guestMaybeButtonPoint, guestButtonSize};
+    CGPoint guestUndecidedButtonPoint = CGPointMake(guestAttendingButtonPoint.x, guestMaybeButtonPoint.y+guestButtonSize.height+2);
+    CGRect guestUndecidedButtonRect = {guestUndecidedButtonPoint, guestButtonSize};
+
+    self.guestAttendingButton = [[UIButton alloc] initWithFrame:guestAttendingButtonRect];
+    self.guestMaybeButton = [[UIButton alloc] initWithFrame:guestMaybeButtonRect];
+    self.guestUndecidedButton = [[UIButton alloc] initWithFrame:guestUndecidedButtonRect];
+
+    [colorAndFontUtility buttonStyleTwo:self.guestAttendingButton withRoundEdges:YES];
+    [colorAndFontUtility buttonStyleOne:self.guestMaybeButton withRoundEdges:YES];
+    [colorAndFontUtility buttonStyleTwo:self.guestUndecidedButton withRoundEdges:YES];
+
+    [self.guestAttendingButton addTarget:self action:@selector(guestButtonTap:) forControlEvents: UIControlEventTouchUpInside];
+    [self.guestMaybeButton addTarget:self action:@selector(guestButtonTap:) forControlEvents: UIControlEventTouchUpInside];
+    [self.guestUndecidedButton addTarget:self action:@selector(guestButtonTap:) forControlEvents: UIControlEventTouchUpInside];
+
+    [self setGuestInfoButtonTitles];
     
     // add views to scroll view
     [self.scrollView addSubview:self.locationLabel];
@@ -214,13 +230,25 @@
     [self.scrollView addSubview:self.startTimeLabel];
     [self.scrollView addSubview:self.endTimeLabel];
     [self.scrollView addSubview:self.eventInfoView];
+    [self.scrollView addSubview:self.guestAttendingButton];
+    [self.scrollView addSubview:self.guestMaybeButton];
+    [self.scrollView addSubview:self.guestUndecidedButton];
     
-    self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, eventInfoViewPoint.y+eventInfoViewSize.height+LABELSPACING*3);
+    self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, guestUndecidedButtonPoint.y+guestButtonSize.height+LABELSPACING);
 }
+
+-(void) setGuestInfoButtonTitles {
+    if(self.guestAttendingButton && self.guestMaybeButton && self.guestUndecidedButton){
+        [self.guestAttendingButton setTitle:[NSString stringWithFormat:@"Guests: %d", [self.acceptedGuests intValue]] forState:UIControlStateNormal];
+        [self.guestMaybeButton setTitle:[NSString stringWithFormat:@"Maybe: %d", [self.maybeGuests intValue]] forState:UIControlStateNormal];
+        [self.guestUndecidedButton setTitle:[NSString stringWithFormat:@"No Response: %d", [self.undecidedGuests intValue]] forState:UIControlStateNormal];}
+}
+
+#pragma mark handleActions
 
 - (IBAction)attendingButtonTap:(id)sender {
     UIView *opaqueView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    opaqueView.backgroundColor = [colorUtility opaqueWhiteColor];
+    opaqueView.backgroundColor = [colorAndFontUtility opaqueWhiteColor];
     opaqueView.tag = 2;
     
     [self.view addSubview:opaqueView];
@@ -228,85 +256,41 @@
     const float maxLabelWidth = (1-2*INPUTBOXWIDTHOFFSETPERCENT)*self.view.frame.size.width;
     const float standardLabelHeight = maxLabelWidth/10.0;
 
-    CGSize cancelButtonSize = CGSizeMake(maxLabelWidth, standardLabelHeight);
-    CGPoint cancelButtonPoint = CGPointMake((opaqueView.frame.size.width-cancelButtonSize.width)/2, opaqueView.frame.size.height-cancelButtonSize.height-self.tabBarController.tabBar.frame.size.height-1);
-    
-    CGRect cancelButtonRect = {cancelButtonPoint, cancelButtonSize};
+    CGSize buttonSize = CGSizeMake(maxLabelWidth, standardLabelHeight);
+    CGPoint cancelButtonPoint = CGPointMake((opaqueView.frame.size.width-buttonSize.width)/2, opaqueView.frame.size.height-buttonSize.height-1);
+    CGRect cancelButtonRect = {cancelButtonPoint, buttonSize};
+    CGPoint notGoingButtonPoint = CGPointMake(cancelButtonPoint.x, cancelButtonPoint.y-LABELSPACING*2-buttonSize.height);
+    CGRect notGoingButtonRect = {notGoingButtonPoint, buttonSize};
+    CGPoint maybeButtonPoint = CGPointMake(notGoingButtonPoint.x, notGoingButtonPoint.y-1-buttonSize.height);
+    CGRect maybeButtonRect = {maybeButtonPoint, buttonSize};
+    CGPoint goingButtonPoint = CGPointMake(maybeButtonPoint.x, maybeButtonPoint.y-1-buttonSize.height);
+    CGRect goingButtonRect = {goingButtonPoint, buttonSize};
+
     
     UIButton* cancelButton = [[UIButton alloc] initWithFrame:cancelButtonRect];
-    [cancelButton setBackgroundColor:[colorUtility buttonColor]];
-    cancelButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-    [cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    UIButton* notGoingButton = [[UIButton alloc] initWithFrame:notGoingButtonRect];
+    UIButton* maybeButton = [[UIButton alloc] initWithFrame:maybeButtonRect];
+    UIButton* goingButton = [[UIButton alloc] initWithFrame:goingButtonRect];
+    
+    [colorAndFontUtility buttonStyleOneSolid:cancelButton withRoundEdges:YES];
+    [colorAndFontUtility buttonStyleTwoSolid:notGoingButton withRoundEdges:YES];
+    [colorAndFontUtility buttonStyleTwoSolid:maybeButton withRoundEdges:YES];
+    [colorAndFontUtility buttonStyleTwoSolid:goingButton withRoundEdges:YES];
+    
     [cancelButton setTitle:@"Cancel" forState:UIControlStateNormal];
-    cancelButton.titleLabel.font  = [UIFont fontWithName:@"Futura" size:16];
-    [[cancelButton layer] setBorderWidth:2.0f];
-    [[cancelButton layer] setBorderColor:[colorUtility buttonColor].CGColor];
-    cancelButton.layer.cornerRadius = CORNERRADIUS;
-    cancelButton.clipsToBounds = YES;
-    [cancelButton setUserInteractionEnabled:YES];
+    [notGoingButton setTitle:@"Not Going" forState:UIControlStateNormal];
+    [maybeButton setTitle:@"Maybe" forState:UIControlStateNormal];
+    [goingButton setTitle:@"Going" forState:UIControlStateNormal];
+    
+    [cancelButton addTarget:self action:@selector(attendingSelection:) forControlEvents: UIControlEventTouchUpInside];
+    [notGoingButton addTarget:self action:@selector(attendingSelection:) forControlEvents: UIControlEventTouchUpInside];
+    [maybeButton addTarget:self action:@selector(attendingSelection:) forControlEvents: UIControlEventTouchUpInside];
+    [goingButton addTarget:self action:@selector(attendingSelection:) forControlEvents: UIControlEventTouchUpInside];
     
     [opaqueView addSubview:cancelButton];
-    [cancelButton addTarget:self action:@selector(attendingSelection:) forControlEvents: UIControlEventTouchUpInside];
-    
-    CGSize notGoingButtonSize = cancelButtonSize;
-    CGPoint notGoingButtonPoint = CGPointMake(cancelButtonPoint.x, cancelButtonPoint.y-LABELSPACING*2-notGoingButtonSize.height);
-    CGRect notGoingButtonRect = {notGoingButtonPoint, notGoingButtonSize};
-    
-    UIButton* notGoingButton = [[UIButton alloc] initWithFrame:notGoingButtonRect];
-    [notGoingButton setBackgroundColor:[UIColor whiteColor]];
-    notGoingButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-    [notGoingButton setTitleColor:[colorUtility textColor] forState:UIControlStateNormal];
-    [notGoingButton setTitle:@"Not Going" forState:UIControlStateNormal];
-    notGoingButton.titleLabel.font  = [UIFont fontWithName:@"Futura" size:16];
-    [[notGoingButton layer] setBorderWidth:2.0f];
-    [[notGoingButton layer] setBorderColor:[colorUtility buttonColor].CGColor];
-    notGoingButton.layer.cornerRadius = CORNERRADIUS;
-    notGoingButton.clipsToBounds = YES;
-    [notGoingButton setUserInteractionEnabled:YES];
-    
     [opaqueView addSubview:notGoingButton];
-    [notGoingButton addTarget:self action:@selector(attendingSelection:) forControlEvents: UIControlEventTouchUpInside];
-
-    
-    CGSize maybeButtonSize = notGoingButtonSize;
-    CGPoint maybeButtonPoint = CGPointMake(notGoingButtonPoint.x, notGoingButtonPoint.y-1-maybeButtonSize.height);
-    CGRect maybeButtonRect = {maybeButtonPoint, maybeButtonSize};
-    
-    UIButton* maybeButton = [[UIButton alloc] initWithFrame:maybeButtonRect];
-    [maybeButton setBackgroundColor:[UIColor whiteColor]];
-    maybeButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-    [maybeButton setTitleColor:[colorUtility textColor] forState:UIControlStateNormal];
-    [maybeButton setTitle:@"Maybe" forState:UIControlStateNormal];
-    maybeButton.titleLabel.font  = [UIFont fontWithName:@"Futura" size:16];
-    [[maybeButton layer] setBorderWidth:2.0f];
-    [[maybeButton layer] setBorderColor:[colorUtility buttonColor].CGColor];
-    maybeButton.layer.cornerRadius = CORNERRADIUS;
-    maybeButton.clipsToBounds = YES;
-    [maybeButton setUserInteractionEnabled:YES];
-    
     [opaqueView addSubview:maybeButton];
-    [maybeButton addTarget:self action:@selector(attendingSelection:) forControlEvents: UIControlEventTouchUpInside];
-
-    
-    CGSize goingButtonSize = maybeButtonSize;
-    CGPoint goingButtonPoint = CGPointMake(maybeButtonPoint.x, maybeButtonPoint.y-1-goingButtonSize.height);
-    CGRect goingButtonRect = {goingButtonPoint, goingButtonSize};
-    
-    UIButton* goingButton = [[UIButton alloc] initWithFrame:goingButtonRect];
-    [goingButton setBackgroundColor:[UIColor whiteColor]];
-    goingButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-    
-    [goingButton setTitleColor:[colorUtility textColor] forState:UIControlStateNormal];
-    [goingButton setTitle:@"Going" forState:UIControlStateNormal];
-    goingButton.titleLabel.font  = [UIFont fontWithName:@"Futura" size:16];
-    [[goingButton layer] setBorderWidth:2.0f];
-    [[goingButton layer] setBorderColor:[colorUtility buttonColor].CGColor];
-    goingButton.layer.cornerRadius = CORNERRADIUS;
-    goingButton.clipsToBounds = YES;
-    [goingButton setUserInteractionEnabled:YES];
-    
     [opaqueView addSubview:goingButton];
-    [goingButton addTarget:self action:@selector(attendingSelection:) forControlEvents: UIControlEventTouchUpInside];
 }
 
 - (IBAction) attendingSelection:(id)sender{
@@ -316,31 +300,58 @@
     if ([label isEqualToString:@"Cancel"]){
         [[self.view viewWithTag:2] removeFromSuperview];
     } else {
+        self.attendingStatusOld = self.attendingButton.titleLabel.text;
+        if([self.attendingStatusOld isEqualToString:@"Not Going"])
+            self.attendingStatusOld = @"NotGoing";
+
         [self.attendingButton setTitle:label forState:UIControlStateNormal];
-        [self updateEventInfo];
+        [self updateEventInfo:NO];
         [[self.view viewWithTag:2] removeFromSuperview];
     }
-        
-
 }
 - (IBAction)postButtonTap:(id)sender {
     NSLog(@"Post tap");
     EventPostsViewController *eventPosts = [[EventPostsViewController alloc] init];
     eventPosts.eventTitle = self.eventTitle;
+    eventPosts.eventID = self.eventID;
     [self.navigationController pushViewController:eventPosts animated:NO];
 }
 
 - (IBAction)inviteButtonTap:(id)sender {
     NSLog(@"invite tap");
-    EventPostsViewController *eventPosts = [[EventPostsViewController alloc] init];
-    eventPosts.eventTitle = self.eventTitle;
-    [self.navigationController pushViewController:eventPosts animated:NO];
+    AddGuestsControllerTVC *inviteGuests = [[AddGuestsControllerTVC alloc] init];
+    inviteGuests.eventTitle = self.eventTitle;
+    inviteGuests.eventID = self.eventID;
+    [self.navigationController pushViewController:inviteGuests animated:NO];
+}
 
+- (IBAction)guestButtonTap:(id)sender {
+    if(sender == self.guestAttendingButton){
+        ViewAcceptedGuestsControllerTVC *viewGuests = [[ViewAcceptedGuestsControllerTVC alloc] init];
+        viewGuests.eventTitle = self.eventTitle;
+        viewGuests.eventID = self.eventID;
+        viewGuests.event = self.event;
+        [self.navigationController pushViewController:viewGuests animated:NO];
+    } else if (sender == self.guestMaybeButton){
+        ViewMaybeGuestsControllerTVC *viewGuests = [[ViewMaybeGuestsControllerTVC alloc] init];
+        viewGuests.eventTitle = self.eventTitle;
+        viewGuests.eventID = self.eventID;
+        viewGuests.event = self.event;
+        [self.navigationController pushViewController:viewGuests animated:NO];
+    } else if (sender == self.guestUndecidedButton){
+        ViewUndecidedGuestsControllerTVC *viewGuests = [[ViewUndecidedGuestsControllerTVC alloc] init];
+        viewGuests.eventTitle = self.eventTitle;
+        viewGuests.eventID = self.eventID;
+        viewGuests.event = self.event;
+        [self.navigationController pushViewController:viewGuests animated:NO];
+    }
 }
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
     return NO;
 }
+
+#pragma mark mapSettings
 
 - (void)setUpMapView {
     NSArray* coordinates = [self geoCodeUsingAddress:self.eventLocation];
@@ -380,7 +391,6 @@
     });
 }
 
-
 -(MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:
 (id <MKAnnotation>)annotation {
     MKPinAnnotationView *pinView = nil;
@@ -400,7 +410,6 @@
     }
     return pinView;
 }
-
 
 - (NSArray *) geoCodeUsingAddress:(NSString *)address {
     double latitude = 0, longitude = 0;
@@ -474,35 +483,49 @@
         }
     }
 }
-- (void)updateEventInfo {
-    PFQuery *query = [PFQuery queryWithClassName:@"Event"];
-    NSArray* attendingType = @[@"Going", @"Maybe", @"NotGoing"];
 
-    [query whereKey:@"title" equalTo:self.eventTitle];
+#pragma mark other
+
+- (void)updateEventInfo:(BOOL)refresh {
+    PFQuery *query = [PFQuery queryWithClassName:@"Event"];    
+    [query whereKey:@"objectId" equalTo:self.eventID];
     // Retrieve the object by id
     [query getObjectInBackgroundWithId:self.eventID block:^(PFObject *event, NSError *error) {
         PFUser *user = [PFUser currentUser];
+        
+        // remove old attending status
+        if(!([self.attendingStatusOld length]>0)){
+            event[@"undecidedGuests"] = [NSNumber numberWithInt:[[event objectForKey:@"undecidedGuests"] intValue]-1];
+        } else {
+            PFRelation *relationOld = [user relationforKey:self.attendingStatusOld];
+            [relationOld removeObject:event];
+            
+            if([self.attendingStatusOld isEqualToString:@"Maybe"]){
+                event[@"maybeGuests"] = [NSNumber numberWithInt:[[event objectForKey:@"maybeGuests"] intValue]-1];
+            } else if([self.attendingStatusOld isEqualToString:@"Going"]){
+                event[@"acceptedGuests"] = [NSNumber numberWithInt:[[event objectForKey:@"acceptedGuests"] intValue]-1];
+            }
+        }
+        
         NSString *attendingStatus = self.attendingButton.titleLabel.text;
         if([attendingStatus isEqualToString:@"Not Going"])
             attendingStatus = @"NotGoing";
         PFRelation *relation = [user relationforKey:attendingStatus];
         [relation addObject:event];
-        [user saveInBackground];
-        for(int i = 0; i < [attendingType count]; i++){
-            if(![[attendingType objectAtIndex:i] isEqualToString:attendingStatus]){
-                PFRelation *relationOld = [user relationforKey:[attendingType objectAtIndex:i]];
-                PFQuery *query = [relationOld query];
-                [query getObjectInBackgroundWithId:self.eventID block:^(PFObject *event, NSError *error) {
-                    if (error) {
-                        // There was an error
-                    } else {
-                        [relationOld removeObject:event];
-                        [user saveInBackground];
-                    }
-                }];
-            }
+        if ([attendingStatus isEqualToString:@"Going"]){
+            event[@"acceptedGuests"] = [NSNumber numberWithInt:[[event objectForKey:@"acceptedGuests"] intValue]+1];
+        } else if ([attendingStatus isEqualToString:@"Maybe"]){
+            event[@"maybeGuests"] = [NSNumber numberWithInt:[[event objectForKey:@"maybeGuests"] intValue]+1];
         }
+        //reset guess info button titles
+        self.acceptedGuests = event[@"acceptedGuests"];
+        self.maybeGuests = event[@"maybeGuests"];
+        self.undecidedGuests = event[@"undecidedGuests"];
+        [self setGuestInfoButtonTitles];
+
+        [event saveInBackground];
         [user saveInBackground];
+        self.event = event;
     }];
 }
 
@@ -528,6 +551,5 @@
         }];
     }
 }
-
 
 @end

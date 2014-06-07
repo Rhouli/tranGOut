@@ -15,10 +15,20 @@
 @implementation CurrentEventControllerTVC
 
 - (PFQuery *)queryForTable {
-    PFQuery *query = [PFQuery queryWithClassName:@"Event"];
     NSDate *currentDate = [NSDate date];
-    [query whereKey:@"startTime" lessThan:currentDate];
-    [query whereKey:@"endTime" greaterThan:currentDate];
+
+    PFQuery *query2 = [PFQuery queryWithClassName:@"Event"];
+    [query2 whereKey:@"Invitations" equalTo:[PFUser currentUser]];
+    [query2 whereKey:@"startTime" lessThan:currentDate];
+    [query2 whereKey:@"endTime" greaterThan:currentDate];
+    
+    PFQuery *query3 = [PFQuery queryWithClassName:@"Event"];
+    [query3 whereKey:@"creator" equalTo:[PFUser currentUser]];
+    [query3 whereKey:@"startTime" lessThan:currentDate];
+    [query3 whereKey:@"endTime" greaterThan:currentDate];
+    
+    PFQuery *query = [PFQuery orQueryWithSubqueries:@[query2, query3]];
+    
     if (self.objects.count == 0) {
         query.cachePolicy = kPFCachePolicyCacheThenNetwork;
     }

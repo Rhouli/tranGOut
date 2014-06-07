@@ -8,7 +8,7 @@
 
 #import "AppDelegate.h"
 #import <Parse/Parse.h>
-#import "colorUtility.h"
+#import "colorAndFontUtility.h"
 
 @implementation AppDelegate
 
@@ -22,12 +22,12 @@
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
     [[UIBarButtonItem appearanceWhenContainedIn:[UINavigationBar class], nil] setTitleTextAttributes:
-     @{NSForegroundColorAttributeName:[colorUtility textColor],
+     @{NSForegroundColorAttributeName:[colorAndFontUtility textColor],
        NSFontAttributeName:[UIFont fontWithName:@"Futura" size:16]}
                                                                                             forState:UIControlStateNormal];
     
     [[UINavigationBar appearanceWhenContainedIn:[UINavigationController class], nil] setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
-                                                           [colorUtility textColor], NSForegroundColorAttributeName,
+                                                           [colorAndFontUtility textColor], NSForegroundColorAttributeName,
                                                                       [UIFont fontWithName:@"Futura" size:18.0], NSFontAttributeName, nil]];
     return YES;
 }

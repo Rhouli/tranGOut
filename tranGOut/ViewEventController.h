@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <Parse/Parse.h>
 
 @interface ViewEventController : UIViewController
 
@@ -17,9 +18,15 @@
 @property (strong, nonatomic) NSString* eventEndTime;
 @property (strong, nonatomic) NSString* eventID;
 @property (strong, nonatomic) UIScrollView* scrollView;
-@property (strong, nonatomic) IBOutlet UIButton *attendingButton;
-@property (strong, nonatomic) IBOutlet UIButton *postButton;
-@property (strong, nonatomic) IBOutlet UIButton *inviteButton;
+@property (strong, nonatomic) UIButton *attendingButton;
+@property (strong, nonatomic) UIButton *postButton;
+@property (strong, nonatomic) UIButton *inviteButton;
+@property (strong, nonatomic) NSNumber *acceptedGuests;
+@property (strong, nonatomic) NSNumber *maybeGuests;
+@property (strong, nonatomic) NSNumber *undecidedGuests;
+@property (strong, nonatomic) PFUser *eventCreator;
+@property (strong, nonatomic) PFObject *event;
 @property BOOL hideEditor;
+@property BOOL blockInvite;
 
 @end

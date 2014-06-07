@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <Parse/Parse.h>
-#import "colorUtility.h"
+#import "colorAndFontUtility.h"
 
 @interface ModifyEventController : UIViewController
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
@@ -25,4 +25,5 @@
 @property (strong, nonatomic) IBOutlet UIButton *blueColorButton;
 @property (strong, nonatomic) IBOutlet UIButton *redColorButton;
 @property (strong, nonatomic) UIView *activeField;
+@property (strong, nonatomic) PFObject *event;
 @end

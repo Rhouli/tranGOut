@@ -11,7 +11,7 @@
 
 #import "AttributedStringCoderHelper.h"
 #import "EventPostsViewController.h"
-#import "colorUtility.h"
+#import "colorAndFontUtility.h"
 
 #define MAXPOSTVIEWWIDTH 0.8
 
@@ -27,19 +27,30 @@
 
 @implementation EventPostsViewController 
 
+#pragma mark viewcontroller lifecycle
 - (void)viewDidLoad {
     UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backgroundTap:)];
     [tapRecognizer setNumberOfTapsRequired:1];
     [self.view addGestureRecognizer:tapRecognizer];
+    self.tabBarController.tabBar.hidden=YES;
     
     self.navigationItem.title = @"Event Discussion";
-    [self.view setBackgroundColor:[colorUtility backgroundColor]];
+    
+    [self.view setBackgroundColor:[colorAndFontUtility backgroundColor]];
     
     self.postFieldArray = [[NSMutableArray alloc] init];
     
     self.spinner = [[UIActivityIndicatorView alloc]initWithFrame:CGRectMake(135,140,50,50)];
     self.spinner.transform = CGAffineTransformMakeScale(1.5, 1.5);
-    self.spinner.color = [colorUtility textColor];
+    self.spinner.color = [colorAndFontUtility textColor];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    self.tabBarController.tabBar.hidden=YES;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    self.tabBarController.tabBar.hidden=NO;
 }
 
 - (void)viewDidLayoutSubviews {
@@ -52,11 +63,13 @@
     [self registerForKeyboardNotifications];
 }
 
+#pragma mark create view
+
 - (void)createScrollView {
     // create scrollview
     const float viewHeaderHeight = self.navigationController.navigationBar.frame.size.height + [[UIApplication sharedApplication] statusBarFrame].size.height;
-    CGPoint scrollViewPoint = CGPointMake(0, viewHeaderHeight+LABELSPACING/2);
-    CGSize scrollViewSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height-self.tabBarController.tabBar.frame.size.height-scrollViewPoint.y);
+    CGPoint scrollViewPoint = CGPointMake(0, viewHeaderHeight);
+    CGSize scrollViewSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height-scrollViewPoint.y);
     CGRect scrollViewRect = {scrollViewPoint, scrollViewSize};
     self.scrollView = [[UIScrollView alloc] initWithFrame:scrollViewRect];
     self.scrollView.scrollEnabled = YES;
@@ -88,8 +101,8 @@
     CGRect postTextInputViewRect = {postTextInputViewPoint, postTextInputViewSize};
 
     self.postTextInputView = [[UITextView alloc] initWithFrame:postTextInputViewRect];
-    [self.postTextInputView setBackgroundColor:[colorUtility textFieldColor]];
-    self.postTextInputView.textColor = [colorUtility opaqueWhiteColor];
+    [self.postTextInputView setBackgroundColor:[colorAndFontUtility textFieldColor]];
+    self.postTextInputView.textColor = [colorAndFontUtility opaqueWhiteColor];
     self.postTextInputView.text = @"Enter a new posting...";
     self.postTextInputView.layer.cornerRadius = CORNERRADIUS;
     [self.postTextInputView setUserInteractionEnabled:YES];
@@ -102,16 +115,9 @@
     CGRect submitPostButtonRect = {submitPostButtonPoint, submitPostButtonSize};
     
     self.submitPostButton = [[UIButton alloc] initWithFrame:submitPostButtonRect];
-    self.submitPostButton.layer.cornerRadius = CORNERRADIUS;
-    self.submitPostButton.clipsToBounds = YES;
-    [self.submitPostButton setBackgroundColor:[colorUtility opaqueWhiteColor]];
-    self.submitPostButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-    [self.submitPostButton setTitleColor:[colorUtility textColor] forState:UIControlStateNormal];
+    [colorAndFontUtility buttonStyleThree:self.submitPostButton withRoundEdges:YES];
     [self.submitPostButton setTitle:@"Submit Post" forState:UIControlStateNormal];
-    [self.submitPostButton setUserInteractionEnabled:YES];
     [self.submitPostButton addTarget:self action:@selector(submitPost:) forControlEvents: UIControlEventTouchUpInside];
-    [[self.submitPostButton layer] setBorderWidth:2.0f];
-    [[self.submitPostButton layer] setBorderColor:[colorUtility buttonColor].CGColor];
 
     [self.scrollView addSubview:self.postTextInputView];
     [self.scrollView addSubview:self.submitPostButton];
@@ -128,54 +134,6 @@
     [self.view endEditing:YES];
 }
 
-- (void)reloadPosts {
-    [self downloadPostsAndRefreshScrollViewContent];
-}
-
-- (void)downloadPostsAndRefreshScrollViewContent {
-    PFQuery *query = [PFQuery queryWithClassName:@"Post"];
-    [query whereKey:@"event" equalTo:self.eventTitle];
-    [query addAscendingOrder:@"createdAt"];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!objects) {
-            NSLog(@"The getFirstObject request failed.");
-        } else {
-            // The find succeeded.
-            NSLog(@"Successfully retrieved the object.");
-            [self.scrollView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-
-            self.posts = objects;
-            [self buildPostsArray];
-            [self createScrollViewContents];
-
-        }
-    }];
-}
-
-- (void)downloadPostsAndCreateScrollViewContent{
-    PFQuery *query = [PFQuery queryWithClassName:@"Post"];
-    [query whereKey:@"event" equalTo:self.eventTitle];
-    [query addAscendingOrder:@"createdAt"];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!objects) {
-            NSLog(@"The getFirstObject request failed.");
-        } else {
-            // The find succeeded.
-            NSLog(@"Successfully retrieved the object.");
-            self.posts = objects;
-            [self buildPostsArray];
-            [self createScrollViewContents];
-            [self.spinner stopAnimating];
-        }
-    }];
-}
-
-- (void)refreshScrollView {
-    [self.scrollView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    [self buildPostsArray];
-    [self createScrollViewContents];
-}
-
 - (void)buildPostsArray {
     const float maxLabelWidth = (1-2*INPUTBOXWIDTHOFFSETPERCENT)*self.view.frame.size.width;
     if(self.posts){
@@ -187,9 +145,9 @@
             if(!currentUsersPost){
                 body = [[NSMutableAttributedString alloc] initWithString:[[self.posts objectAtIndex:i] objectForKey:@"creator"]];
                 [body appendAttributedString:[[NSAttributedString alloc] initWithString:@": \n"]];
-                [body setAttributes:@{NSForegroundColorAttributeName:[colorUtility textColor],
+                [body setAttributes:@{NSForegroundColorAttributeName:[colorAndFontUtility textColor],
                                       NSUnderlineStyleAttributeName:[NSNumber numberWithInt:1],
-                                      NSFontAttributeName:[UIFont fontWithName:@"Futura" size:14.0]}
+                                      NSFontAttributeName:FUTURA_SMALL_FONT}
                               range:(NSRange){0,[body length] }];
             } else {
                 body = [[NSMutableAttributedString alloc] initWithString:@""];
@@ -222,34 +180,30 @@
             CGRect userPostViewRect = CGRectMake(0, 0, userPostViewSize.width, userPostViewSize.width);
             
             UITextView *userPostView = [[UITextView alloc] initWithFrame:userPostViewRect];
-            if([[PFUser currentUser].username isEqualToString:[[self.posts objectAtIndex:i] objectForKey:@"creator"]]){
-                [userPostView setBackgroundColor:[colorUtility opaqueWhiteColor]];
-                [[userPostView layer] setBorderWidth:2.0f];
-                [[userPostView layer] setBorderColor:[colorUtility darkLabelColor].CGColor];
-                
+            if(currentUsersPost){
+                [colorAndFontUtility postStyleSenderMe:userPostView];
             } else {
-                [userPostView setBackgroundColor:[colorUtility opaqueWhiteColor]];
-                [[userPostView layer] setBorderWidth:2.0f];
-                [[userPostView layer] setBorderColor:[colorUtility buttonColor].CGColor];
+                [colorAndFontUtility postStyleSenderOther:userPostView];
             }
             userPostView.attributedText = (NSAttributedString*)body;
-            userPostView.layer.cornerRadius = CORNERRADIUS;
-            [userPostView setUserInteractionEnabled:NO];
             [userPostView scrollRectToVisible:userPostViewRect animated:NO];
             [userPostView sizeToFit];
             [userPostView layoutIfNeeded];
-            userPostView.frame = CGRectMake(0, 0, userPostViewSize.width, userPostView.frame.size.height);
+            
+            userPostView.frame = CGRectMake(0, 0, userPostView.frame.size.width, userPostView.frame.size.height);
             UILabel *dateLabel = [self insertPostDate:userPostView forDate:[self datePostWasCreated:[self.posts objectAtIndex:i]] withPostByCurrentUser:currentUsersPost];
             
             CGRect postFrame;
             if(currentUsersPost){
                 postFrame = CGRectMake(dateLabel.frame.origin.x, userPostViewPoint.y, userPostView.frame.size.width+dateLabel.frame.size.width, userPostView.frame.size.height);
-                userPostView.frame = CGRectMake(dateLabel.frame.size.width - SIDESPACING, 0, userPostViewSize.width, userPostView.frame.size.height);
+                userPostView.frame = CGRectMake(self.view.frame.size.width -userPostView.frame.size.width - SIDESPACING, 0, userPostView.frame.size.width, userPostView.frame.size.height);
             } else {
                 postFrame = CGRectMake(userPostViewPoint.x, userPostViewPoint.y, userPostView.frame.size.width+dateLabel.frame.size.width, userPostView.frame.size.height);
-                userPostView.frame = CGRectMake(0, 0, userPostViewSize.width, userPostView.frame.size.height);
+                userPostView.frame = CGRectMake(0, 0, userPostView.frame.size.width, userPostView.frame.size.height);
                 
             }
+            
+            [userPostView setUserInteractionEnabled:NO];
             UIView* totalView = [[UIView alloc] initWithFrame:postFrame];
             [totalView addSubview:userPostView];
             [totalView addSubview:dateLabel];
@@ -260,26 +214,20 @@
 }
 
 - (UILabel*) insertPostDate:(UITextView*)postView forDate:(NSString*)date withPostByCurrentUser:(BOOL)currentUserPost {
-
     CGPoint postDatePoint;
+    CGSize postDateSize = CGSizeMake(self.scrollView.frame.size.width/4, postView.frame.size.height);
     if(currentUserPost){
-        postDatePoint = CGPointMake(0, postView.frame.size.height/2-LABELSPACING/2);
+        postDatePoint = CGPointMake(-LABELSPACING/2, 0);
     } else {
-        postDatePoint = CGPointMake(postView.frame.size.width-LABELSPACING, postView.frame.size.height/2-LABELSPACING/2);
+        postDatePoint = CGPointMake(self.view.frame.size.width-postDateSize.width, 0);
     }
-    CGSize postDateSize = CGSizeMake(self.scrollView.frame.size.width-postView.frame.size.width, 0);
-    
     CGRect postDateRect = {postDatePoint, postDateSize};
     
     UILabel* postDateLabel = [[UILabel alloc] initWithFrame:postDateRect];
     postDateLabel.textColor = [UIColor whiteColor];
-    postDateLabel.font = [UIFont fontWithName:@"Futura" size:8];
+    postDateLabel.font = FUTURA_EXTRA_SMALL_FONT;
     postDateLabel.text = date;
     postDateLabel.textAlignment = NSTextAlignmentCenter;
-    [postDateLabel sizeToFit];
-    [postDateLabel layoutIfNeeded];
-    
-    postDateLabel.frame = CGRectMake(postDatePoint.x, postDatePoint.y, postDateSize.width, postDateLabel.frame.size.height);
     
     return postDateLabel;
 }
@@ -304,6 +252,7 @@
     self.activeField = textView;
     if ([textView.text isEqualToString:@"Enter a new posting..."]) {
         textView.text = @"";
+        textView.textColor = [UIColor whiteColor];
     }
     [textView becomeFirstResponder];
 }
@@ -312,15 +261,17 @@
     self.activeField = nil;
     if ([textView.text isEqualToString:@""]) {
         textView.text = @"Enter a new posting...";
-        textView.textColor = [colorUtility opaqueWhiteColor];
+        textView.textColor = [colorAndFontUtility opaqueWhiteColor];
     }
     [textView resignFirstResponder];
 }
 
+#pragma mark database managment
 - (IBAction)submitPost:(id)sender {
     PFObject *post = [PFObject objectWithClassName:@"Post"];
     post[@"creator"] = [PFUser currentUser].username;
     post[@"event"] = self.eventTitle;
+    post[@"eventId"] = self.eventID;
     post[@"content"] = [AttributedStringCoderHelper encodeAttributedString:[self.postTextInputView attributedText]];
     
     [post saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
@@ -331,6 +282,56 @@
         }
     }];
 }
+
+- (void)reloadPosts {
+    [self downloadPostsAndRefreshScrollViewContent];
+}
+
+- (void)downloadPostsAndRefreshScrollViewContent {
+    PFQuery *query = [PFQuery queryWithClassName:@"Post"];
+    [query whereKey:@"event" equalTo:self.eventTitle];
+    [query addAscendingOrder:@"createdAt"];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!objects) {
+            NSLog(@"The getFirstObject request failed.");
+        } else {
+            // The find succeeded.
+            NSLog(@"Successfully retrieved the object.");
+            [self.scrollView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+            
+            self.posts = objects;
+            [self buildPostsArray];
+            [self createScrollViewContents];
+            
+        }
+    }];
+}
+
+- (void)downloadPostsAndCreateScrollViewContent{
+    PFQuery *query = [PFQuery queryWithClassName:@"Post"];
+    [query whereKey:@"eventId" equalTo:self.eventID];
+    [query addAscendingOrder:@"createdAt"];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!objects) {
+            NSLog(@"The getFirstObject request failed.");
+        } else {
+            // The find succeeded.
+            NSLog(@"Successfully retrieved the object.");
+            self.posts = objects;
+            [self buildPostsArray];
+            [self createScrollViewContents];
+            [self.spinner stopAnimating];
+        }
+    }];
+}
+
+- (void)refreshScrollView {
+    [self.scrollView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    [self buildPostsArray];
+    [self createScrollViewContents];
+}
+
+#pragma mark Keyboard Auto Scrolling
 
 // Call this method somewhere in your view controller setup code.
 - (void)registerForKeyboardNotifications {
@@ -360,8 +361,10 @@
     
     CGRect aRect = self.scrollView.frame;
     aRect.size.height -= kbSize.height;
-    if (!CGRectContainsPoint(aRect, self.activeField.frame.origin) ) {
-        [self.scrollView scrollRectToVisible:self.activeField.frame animated:YES];
+    if([self.activeField isEqual:self.postTextInputView]){
+        if (!CGRectContainsPoint(aRect, self.submitPostButton.frame.origin) ) {
+            [self.scrollView scrollRectToVisible:self.submitPostButton.frame animated:YES];
+        }
     }
 }
 

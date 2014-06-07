@@ -14,10 +14,22 @@
 
 @implementation PastEventControllerTVC
 
+- (void)viewDidLoad {
+    [super viewDidLoad];
+}
 - (PFQuery *)queryForTable {
-    PFQuery *query = [PFQuery queryWithClassName:@"Event"];
     NSDate *currentDate = [NSDate date];
-    [query whereKey:@"endTime" lessThan:currentDate];
+    
+    PFQuery *query2 = [PFQuery queryWithClassName:@"Event"];
+    [query2 whereKey:@"Invitations" equalTo:[PFUser currentUser]];
+    [query2 whereKey:@"endTime" lessThan:currentDate];
+    
+    PFQuery *query3 = [PFQuery queryWithClassName:@"Event"];
+    [query3 whereKey:@"creator" equalTo:[PFUser currentUser]];
+    [query3 whereKey:@"endTime" lessThan:currentDate];
+    
+    PFQuery *query = [PFQuery orQueryWithSubqueries:@[query2, query3]];
+
     if (self.objects.count == 0) {
         query.cachePolicy = kPFCachePolicyCacheThenNetwork;
     }
@@ -31,6 +43,7 @@
 - (void)prepareImageViewController:(ViewEventController *)ivc toDisplayEvent:(PFObject *)event {
     [super prepareImageViewController:ivc toDisplayEvent:(PFObject *)event];
     ivc.hideEditor = YES;
+    ivc.blockInvite = YES;
 }
 
 @end

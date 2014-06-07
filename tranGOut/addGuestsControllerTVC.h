@@ -7,7 +7,7 @@
 //
 
 #import <Parse/Parse.h>
+#import "GuestsControllerTVC.h"
 
-@interface AddGuestsControllerTVC : PFQueryTableViewController
-
+@interface AddGuestsControllerTVC : GuestsControllerTVC
 @end

@@ -19,6 +19,21 @@
 
 - (void)viewDidLoad {
     [self createScrollView];
+    self.view.backgroundColor = [colorAndFontUtility backgroundColor];
+    [self.navigationItem.backBarButtonItem setAction:@selector(removeEvent:)];
+}
+
+- (void) removeEvent:(id)sender {
+    if(self.event)
+       [self.event deleteInBackground];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    self.tabBarController.tabBar.hidden=YES;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    self.tabBarController.tabBar.hidden=NO;
 }
 
 - (void) createScrollView{
@@ -27,8 +42,8 @@
     const float viewHeaderHeight = self.navigationController.navigationBar.frame.size.height + [[UIApplication sharedApplication] statusBarFrame].size.height;
     // create scrollview
     
-    CGPoint scrollViewPoint = CGPointMake(0, LABELSPACING/2+viewHeaderHeight);
-    CGSize scrollViewSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height-scrollViewPoint.y-self.navigationController.navigationBar.frame.size.height);
+    CGPoint scrollViewPoint = CGPointMake(0, viewHeaderHeight);
+    CGSize scrollViewSize = CGSizeMake(self.view.frame.size.width, self.view.frame.size.height-scrollViewPoint.y);
     CGRect scrollViewRect = {scrollViewPoint, scrollViewSize};
     self.scrollView = [[UIScrollView alloc] initWithFrame:scrollViewRect];
     self.scrollView.scrollEnabled = YES;
@@ -36,21 +51,14 @@
     
     // Create all input labels
     // Event Title
-    CGPoint eventTitlePoint = CGPointMake(SIDESPACING, 0);
+    CGPoint eventTitlePoint = CGPointMake(SIDESPACING, LABELSPACING);
     CGSize eventTitleSize = CGSizeMake(maxLabelWidth, standardLabelHeight);
     CGRect eventTitleRect = {eventTitlePoint, eventTitleSize};
     
     self.eventTitle = [[UITextField alloc] initWithFrame:eventTitleRect];
-    self.eventTitle.borderStyle = UITextBorderStyleRoundedRect;
-    [self.eventTitle setBackgroundColor:[colorUtility opaqueWhiteColor]];
+    [colorAndFontUtility buttonStyleThree:self.eventTitle withRoundEdges:YES];
     [self changePlaceholderText:self.eventTitle withString:@"Title"];
     [self.eventTitle setValue:[UIColor lightGrayColor] forKeyPath:@"_placeholderLabel.textColor"];
-    self.eventTitle.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-    self.eventTitle.textAlignment = NSTextAlignmentCenter;
-    [self.eventTitle setTextColor:[UIColor blackColor]];
-    self.eventTitle.layer.cornerRadius = CORNERRADIUS;
-    [[self.eventTitle layer] setBorderWidth:2.0f];
-    [[self.eventTitle layer] setBorderColor:[colorUtility darkLabelColor].CGColor];
 
     // Location Title
     CGPoint eventLocationPoint = CGPointMake(eventTitlePoint.x, eventTitlePoint.y + eventTitleSize.height + LABELSPACING);
@@ -58,85 +66,56 @@
     CGRect eventLocationRect = {eventLocationPoint, eventLocationSize};
     
     self.eventLocation = [[UITextField alloc] initWithFrame:eventLocationRect];
-    self.eventLocation.borderStyle = UITextBorderStyleRoundedRect;
-    [self.eventLocation setBackgroundColor:[colorUtility opaqueWhiteColor]];
+    [colorAndFontUtility buttonStyleThree:self.eventLocation withRoundEdges:YES];
     [self changePlaceholderText:self.eventLocation withString:@"Location"];
     [self.eventLocation setValue:[UIColor lightGrayColor] forKeyPath:@"_placeholderLabel.textColor"];
-    self.eventLocation.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
-    self.eventLocation.textAlignment = NSTextAlignmentCenter;
-    [self.eventLocation setTextColor:[UIColor blackColor]];
-    self.eventLocation.layer.cornerRadius = CORNERRADIUS;
-    [[self.eventLocation layer] setBorderWidth:2.0f];
-    [[self.eventLocation layer] setBorderColor:[colorUtility darkLabelColor].CGColor];
 
-    // From Text Label
-    CGSize fromLabelSize = CGSizeMake(eventLocationSize.width/2.0-SIDESPACING/2, eventLocationSize.height/2.0);
+    // From and to Text Label
+    CGSize labelSize = CGSizeMake(eventLocationSize.width/2.0-SIDESPACING/2, eventLocationSize.height/2.0);
     CGPoint fromLabelPoint = CGPointMake(eventLocationPoint.x, eventLocationPoint.y + eventLocationSize.height + LABELSPACING);
-    CGRect fromLabelRect = {fromLabelPoint, fromLabelSize};
+    CGRect fromLabelRect = {fromLabelPoint, labelSize};
+    CGPoint toLabelPoint = CGPointMake(fromLabelPoint.x+labelSize.width+SIDESPACING, fromLabelPoint.y);
+    CGRect toLabelRect = {toLabelPoint, labelSize};
     
     UILabel *fromLabel = [[UILabel alloc] initWithFrame:fromLabelRect];
     [fromLabel setText:@"From"];
-    [fromLabel setTextColor:[colorUtility textColor]];
+    [fromLabel setTextColor:[colorAndFontUtility textColor]];
     [fromLabel setTextAlignment:NSTextAlignmentCenter];
-    fromLabel.font = [fromLabel.font fontWithSize:12];
-    
-    // To Text Label
-    CGSize toLabelSize = fromLabelSize;
-    CGPoint toLabelPoint = CGPointMake(fromLabelPoint.x+fromLabelSize.width+SIDESPACING, fromLabelPoint.y);
-    CGRect toLabelRect = {toLabelPoint, toLabelSize};
+    fromLabel.font = FUTURA_SMALL_FONT;
     
     UILabel *toLabel = [[UILabel alloc] initWithFrame:toLabelRect];
     [toLabel setText:@"To"];
-    [toLabel setTextColor:[colorUtility textColor]];
+    [toLabel setTextColor:[colorAndFontUtility textColor]];
     [toLabel setTextAlignment:NSTextAlignmentCenter];
-    toLabel.font = [toLabel.font fontWithSize:12];
+    toLabel.font = FUTURA_SMALL_FONT;
     
-    // Start time input label
-    CGPoint startTimePoint = CGPointMake(fromLabelPoint.x, fromLabelPoint.y+fromLabelSize.height+1);
-    CGSize startTimeSize = CGSizeMake(fromLabelSize.width, standardLabelHeight);
-    CGRect startTimeRect = {startTimePoint, startTimeSize};
+    // Start and end time input label
+    CGPoint startTimePoint = CGPointMake(fromLabelPoint.x, fromLabelPoint.y+labelSize.height+1);
+    CGSize timeSize = CGSizeMake(labelSize.width, standardLabelHeight);
+    CGRect startTimeRect = {startTimePoint, timeSize};
+    CGPoint endTimePoint = CGPointMake(toLabelPoint.x, toLabelPoint.y+labelSize.height+1);
+    CGRect endTimeRect = {endTimePoint, timeSize};
     
     self.startTime = [[UIButton alloc] initWithFrame:startTimeRect];
-    self.startTime.layer.cornerRadius = CORNERRADIUS;
-    self.startTime.clipsToBounds = YES;
-    [self.startTime setBackgroundColor:[colorUtility opaqueWhiteColor]];
-    self.startTime.titleLabel.textAlignment = NSTextAlignmentCenter;
-    [self.startTime setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [self.startTime setUserInteractionEnabled:YES];
-    [self.startTime addTarget:self action:@selector(showDatePicker:) forControlEvents: UIControlEventTouchUpInside];
-    [[self.startTime layer] setBorderWidth:2.0f];
-    [[self.startTime layer] setBorderColor:[colorUtility darkLabelColor].CGColor];
-
-    // end time input label
-    CGPoint endTimePoint = CGPointMake(toLabelPoint.x, toLabelPoint.y+toLabelSize.height+1);
-    CGSize endTimeSize = startTimeSize;
-    CGRect endTimeRect = {endTimePoint, endTimeSize};
-    
     self.endTime = [[UIButton alloc] initWithFrame:endTimeRect];
-    self.endTime.layer.cornerRadius = CORNERRADIUS;
-    self.endTime.clipsToBounds = YES;
-    [self.endTime setBackgroundColor:[colorUtility opaqueWhiteColor]];
-    self.endTime.titleLabel.textAlignment = NSTextAlignmentCenter;
-    [self.endTime setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [self.endTime setUserInteractionEnabled:YES];
+
+    [colorAndFontUtility buttonStyleThree:self.startTime withRoundEdges:NO];
+    [colorAndFontUtility buttonStyleThree:self.endTime withRoundEdges:NO];
+    
+    [self.startTime addTarget:self action:@selector(showDatePicker:) forControlEvents: UIControlEventTouchUpInside];
     [self.endTime addTarget:self action:@selector(showDatePicker:) forControlEvents: UIControlEventTouchUpInside];
-    [[self.endTime layer] setBorderWidth:2.0f];
-    [[self.endTime layer] setBorderColor:[colorUtility darkLabelColor].CGColor];
 
     // add event info
-    CGPoint eventInfoPoint = CGPointMake(startTimePoint.x, startTimePoint.y+startTimeSize.height+LABELSPACING);
+    CGPoint eventInfoPoint = CGPointMake(startTimePoint.x, startTimePoint.y+timeSize.height+LABELSPACING);
     CGSize eventInfoSize = CGSizeMake(maxLabelWidth, maxLabelWidth/2.0);
     CGRect eventInfoRect = {eventInfoPoint, eventInfoSize};
     
     self.eventInfo = [[UITextView alloc] initWithFrame:eventInfoRect];
-    [self.eventInfo setBackgroundColor:[colorUtility textFieldColor]];
-    self.eventInfo.textColor = [colorUtility opaqueWhiteColor];
+    [colorAndFontUtility textInputBox:self.eventInfo withRoundEdges:YES];
+
+    self.eventInfo.textColor = [colorAndFontUtility opaqueWhiteColor];
     self.eventInfo.text = @"Enter information about event...";
-    self.eventInfo.layer.cornerRadius = CORNERRADIUS;
-    [self.eventInfo setUserInteractionEnabled:YES];
-    [self.eventInfo setDelegate:self];
     [self.eventInfo scrollRectToVisible:eventInfoRect animated:NO];
-    //[self.eventInfo becomeFirstResponder];
     
     // make bold button
     CGPoint boldFontButtonPoint = CGPointMake(eventInfoPoint.x, eventInfoPoint.y+eventInfoSize.height);
@@ -172,16 +151,8 @@
     CGRect addGuestButtonRect = {addGuestButtonPoint, addGuestButtonSize};
     
     self.addGuestButton = [[UIButton alloc] initWithFrame:addGuestButtonRect];
-    self.addGuestButton.layer.cornerRadius = CORNERRADIUS;
-    self.addGuestButton.clipsToBounds = YES;
-    [self.addGuestButton setBackgroundColor:[colorUtility opaqueWhiteColor]];
-    self.addGuestButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-    [self.addGuestButton setTitleColor:[colorUtility textColor] forState:UIControlStateNormal];
+    [colorAndFontUtility buttonStyleTwo:self.addGuestButton withRoundEdges:YES];
     [self.addGuestButton setTitle:@"Invite Guests" forState:UIControlStateNormal];
-    [self.addGuestButton setUserInteractionEnabled:YES];
-    [self.addGuestButton addTarget:self action:@selector(addGuest:) forControlEvents: UIControlEventTouchUpInside];
-    [[self.addGuestButton layer] setBorderWidth:2.0f];
-    [[self.addGuestButton layer] setBorderColor:[colorUtility buttonColor].CGColor];
     
     // add submit button
     const float additionalSpacing = 15;
@@ -191,12 +162,7 @@
     CGRect submitButtonRect = {submitButtonPoint, submitButtonSize};
     
     self.submitButton = [[UIButton alloc] initWithFrame:submitButtonRect];
-    self.submitButton.layer.cornerRadius = CORNERRADIUS;
-    self.submitButton.clipsToBounds = YES;
-    [self.submitButton setBackgroundColor:[colorUtility buttonColor]];
-    self.submitButton.titleLabel.textAlignment = NSTextAlignmentCenter;
-    [self.submitButton setTitleColor:[colorUtility textMatchingBackgroundColor] forState:UIControlStateNormal];
-    [self.submitButton setUserInteractionEnabled:YES];
+    [colorAndFontUtility buttonStyleOne:self.submitButton withRoundEdges:YES];
     
     self.greenColorButton.tag = 0;
     self.blueColorButton.tag = 0;
@@ -217,22 +183,22 @@
     [self.scrollView addSubview:self.addGuestButton];
     [self.scrollView addSubview:self.submitButton];
     
+    [self.eventInfo setDelegate:self];
     self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width, submitButtonPoint.y+submitButtonSize.height+LABELSPACING*2);
 }
+
 - (void)changePlaceholderText:(UITextField*)textField withString:(NSString *)placeholderText{
     // set placeholder text color for eventlocation and eventtitle
     if ([textField respondsToSelector:@selector(setAttributedPlaceholder:)]) {
-        UIColor *color = [colorUtility opaqueWhiteColor];
+        UIColor *color = [colorAndFontUtility opaqueWhiteColor];
         textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:placeholderText attributes:@{NSForegroundColorAttributeName: color}];
     } else {
         NSLog(@"Cannot set placeholder text's color, because deployment target is earlier than iOS 6.0");
         // TODO: Add fall-back code to set placeholder color.
     }
 }
-- (IBAction)addGuest:(id)sender{
-    NSLog(@"Guest added");
-}
 
+#pragma mark date picker info
 -(IBAction)showDatePicker:(id)sender{
     // hide keyboard and button
     self.submitButton.hidden = YES;
@@ -370,17 +336,18 @@
     return [calendar dateByAddingComponents:components toDate:date options:0];
 }
 
-- (IBAction)backgroundTap:(id)sender {
-    [self.view endEditing:YES];
-    //[self.datePicker removeFromSuperview];
-}
-
 -(void)LabelChange:(id)sender {
     NSDateFormatter *df = [[NSDateFormatter alloc]init];
     df.dateStyle = NSDateFormatterMediumStyle;
     NSLog(@"%@",[NSString stringWithFormat:@"%@",[df stringFromDate:self.datePicker.date]]);
 }
 
+- (IBAction)backgroundTap:(id)sender {
+    [self.view endEditing:YES];
+    //[self.datePicker removeFromSuperview];
+}
+
+#pragma mark font and color
 - (void)resetFont {
     float fontSize = self.eventInfo.font.pointSize;
     UIColor *foregroundColor;
@@ -392,7 +359,7 @@
     else if(self.redColorButton.tag != 0)
         foregroundColor = [UIColor redColor];
     else
-        foregroundColor = [UIColor whiteColor];
+        foregroundColor = [colorAndFontUtility darkLabelColor];
     if(self.boldFontButton.tag != 0 && self.italicFontButton.tag !=0)
         font = [UIFont fontWithName:@"Trebuchet-BoldItalic" size:fontSize];
     else if(self.boldFontButton.tag !=0)
@@ -445,7 +412,7 @@
         [self resetColorButtons];
         
         sender.tag = 1;
-        [sender setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [sender setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [sender setBackgroundColor:[UIColor whiteColor]];
         [sender setTitle:@"White" forState:UIControlStateNormal];
     }
@@ -470,6 +437,8 @@
     self.activeField = textView;
     if ([textView.text isEqualToString:@"Enter information about event..."]) {
         textView.text = @"";
+        [textView setTextColor:[colorAndFontUtility darkLabelColor]];
+        [textView setFont:FUTURA_SMALL_FONT];
         [self resetFont];
     }
     [textView becomeFirstResponder];
@@ -479,7 +448,8 @@
     self.activeField = nil;
     if ([textView.text isEqualToString:@""]) {
         textView.text = @"Enter information about event...";
-        textView.textColor = [colorUtility opaqueWhiteColor];
+        [textView setTextColor:[colorAndFontUtility opaqueWhiteColor]];
+        [textView setFont:FUTURA_SMALL_FONT];
     }
     [textView resignFirstResponder];
 }
