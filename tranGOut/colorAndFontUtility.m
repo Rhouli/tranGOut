@@ -61,6 +61,10 @@
     return [UIColor colorWithWhite:1 alpha:0.6];
     //return [UIColor colorWithRed:240.0/255.0 green:231.0/255.0 blue:151.0/255.0 alpha:1];
 }
++ (UIColor*)redTextColor {
+    return [UIColor colorWithRed:192.0/255.0 green:60.0/255.0 blue:68.0/255.0 alpha:1];
+}
+
 + (void)setBorder:(UIView *)view withColor:(UIColor *)color{
   [[view layer] setBorderWidth:2.0f];
   [[view layer] setBorderColor:color.CGColor];
@@ -141,8 +145,8 @@
 
 + (void)buttonStyleTwo:(UIView *)view withRoundEdges:(BOOL)round{
     UIColor *borderColor = [self buttonColor];
-    UIColor *fontColor = [self darkLabelColor];
-    UIColor *backgroundColor = [self opaqueLabelColor];\
+    UIColor *fontColor =  [self darkLabelColor];
+    UIColor *backgroundColor = [self opaqueLabelColor];
     bool border = NO;
     if(round && border)
         [self setBorderWithRoundEdge:view withColor:borderColor];
@@ -235,6 +239,21 @@
     }
 }
 
++ (void)buttonStyleFive:(UIView *)view withRoundEdges:(BOOL)round{
+    UIColor *borderColor = [self lightLabelColor];
+    UIColor *fontColor =  [self buttonColor];
+    UIColor *backgroundColor = [self lightLabelColor];
+    bool border = NO;
+    if(round && border)
+        [self setBorderWithRoundEdge:view withColor:borderColor];
+    else if(border)
+        [self setBorder:view withColor:borderColor];
+    else if(round)
+        [self setRoundEdge:view];
+    if([view isKindOfClass:[UIButton class]]){
+        [self setButton:(UIButton*)view withBackgroundColor:backgroundColor withTextColor:fontColor andFont:FUTURA_MEDIUM_FONT];
+    }
+}
 + (void)textInputBox:(UIView *)view withRoundEdges:(BOOL)round {
     UIColor *borderColor = [UIColor clearColor];
     UIColor *fontColor = [self textColor];

@@ -21,11 +21,7 @@
 }
 
 - (PFQuery *)queryForTable {
-    PFRelation *relation = [self.event relationForKey:@"Invitations"];
-    PFQuery *query = [relation query];
-    [query whereKey:@"Going" notEqualTo:self.event];
-    [query whereKey:@"Maybe" notEqualTo:self.event];
-    [query whereKey:@"NotGoing" notEqualTo:self.event];
+    PFQuery *query = [[self.event relationForKey:@"Undecided"] query];
     
     if (self.objects.count == 0) {
         query.cachePolicy = kPFCachePolicyCacheThenNetwork;

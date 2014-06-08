@@ -95,6 +95,7 @@
 		942A4FA1192F208500C93E5B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		942A4FA3192F21C000C93E5B /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		942A4FA8192F3A9200C93E5B /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../FacebookSDK/FacebookSDK.framework; sourceTree = "<group>"; };
+		9436E3E91942B85A00E63A43 /* FontUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FontUtility.h; sourceTree = "<group>"; };
 		943BEC6D19384354003F2BFC /* EditEventController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditEventController.h; sourceTree = "<group>"; };
 		943BEC6E19384354003F2BFC /* EditEventController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditEventController.m; sourceTree = "<group>"; };
 		943BEC70193845CF003F2BFC /* ModifyEventController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModifyEventController.h; sourceTree = "<group>"; };
@@ -124,8 +125,7 @@
 		94C88D5319385753006AF41F /* FutureEventControllerTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FutureEventControllerTVC.m; sourceTree = "<group>"; };
 		94C88D5819386A93006AF41F /* AttributedStringCoderHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttributedStringCoderHelper.h; sourceTree = "<group>"; };
 		94C88D5919386A93006AF41F /* AttributedStringCoderHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttributedStringCoderHelper.m; sourceTree = "<group>"; };
-		94C88D5E19386B11006AF41F /* FontUtility.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = FontUtility.c; path = ../FontUtility.c; sourceTree = "<group>"; };
-		94C88D6119386B3A006AF41F /* FontUtility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FontUtility.h; path = ../FontUtility.h; sourceTree = "<group>"; };
+		94C88D5E19386B11006AF41F /* FontUtility.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = FontUtility.c; sourceTree = "<group>"; };
 		94CC27F219416FD600A4C5D4 /* addGuestsControllerTVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = addGuestsControllerTVC.h; sourceTree = "<group>"; };
 		94CC27F319416FD600A4C5D4 /* addGuestsControllerTVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = addGuestsControllerTVC.m; sourceTree = "<group>"; };
 		94D87EE1193722B900E5D10F /* ViewEventController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewEventController.h; sourceTree = "<group>"; };
@@ -318,8 +318,8 @@
 			children = (
 				94C88D5819386A93006AF41F /* AttributedStringCoderHelper.h */,
 				94C88D5919386A93006AF41F /* AttributedStringCoderHelper.m */,
-				94C88D6119386B3A006AF41F /* FontUtility.h */,
 				94C88D5E19386B11006AF41F /* FontUtility.c */,
+				9436E3E91942B85A00E63A43 /* FontUtility.h */,
 			);
 			name = AttributedStringDatabase;
 			sourceTree = "<group>";

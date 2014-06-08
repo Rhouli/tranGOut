@@ -31,6 +31,7 @@
 + (UIColor*)pastelGreenColor;
 + (UIColor*)buttonColor;
 + (UIColor*)opaqueWhiteColor;
++ (UIColor*)redTextColor;
 + (void)setBorder:(UIView *)view withColor:(UIColor *)color;
 + (void)setBorderWithRoundEdge:(UIView *)view withColor:(UIColor *)color;
 + (void)setRoundEdge:(UIView *)view;
@@ -45,6 +46,7 @@
 + (void)buttonStyleThree:(UIView *)view withRoundEdges:(BOOL)round;
 + (void)buttonStyleThreeSolid:(UIView *)view withRoundEdges:(BOOL)round;
 + (void)buttonStyleFour:(UIView *)view withRoundEdges:(BOOL)round;
++ (void)buttonStyleFive:(UIView *)view withRoundEdges:(BOOL)round;
 + (void)textInputBox:(UIView *)view withRoundEdges:(BOOL)round;
 + (void)postStyleSenderMe:(UIView *)view;
 + (void)postStyleSenderOther:(UIView *)view;

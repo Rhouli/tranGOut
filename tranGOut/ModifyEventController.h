@@ -26,4 +26,7 @@
 @property (strong, nonatomic) IBOutlet UIButton *redColorButton;
 @property (strong, nonatomic) UIView *activeField;
 @property (strong, nonatomic) PFObject *event;
+
+-(IBAction)showDatePicker:(id)sender;
+- (void)removeViews:(id)object;
 @end

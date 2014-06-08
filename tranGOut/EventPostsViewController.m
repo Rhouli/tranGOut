@@ -289,7 +289,7 @@
 
 - (void)downloadPostsAndRefreshScrollViewContent {
     PFQuery *query = [PFQuery queryWithClassName:@"Post"];
-    [query whereKey:@"event" equalTo:self.eventTitle];
+    [query whereKey:@"eventId" equalTo:self.eventID];
     [query addAscendingOrder:@"createdAt"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!objects) {
@@ -302,7 +302,6 @@
             self.posts = objects;
             [self buildPostsArray];
             [self createScrollViewContents];
-            
         }
     }];
 }

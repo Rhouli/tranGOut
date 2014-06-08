@@ -10,6 +10,7 @@
 #import "addGuestsControllerTVC.h"
 
 @interface EditEventController ()
+@property (strong, nonatomic) UIButton *deleteButton;
 @end
 
 @implementation EditEventController
@@ -26,6 +27,42 @@
     [self.submitButton setTitle:@"Edit Event" forState:UIControlStateNormal];
     [self.submitButton addTarget:self action:@selector(editTheEvent:) forControlEvents: UIControlEventTouchUpInside];
     [self.addGuestButton addTarget:self action:@selector(addGuestAndSubmit:) forControlEvents: UIControlEventTouchUpInside];
+    
+    [self addDeleteButton];
+}
+
+-(void) addDeleteButton {
+    // add submit button
+    CGPoint deleteButtonPoint = CGPointMake(self.submitButton.frame.origin.x, self.submitButton.frame.origin.y+self.submitButton.frame.size.height+LABELSPACING);
+    CGSize deleteButtonSize = self.submitButton.frame.size;
+    CGRect deleteButtonRect = {deleteButtonPoint, deleteButtonSize};
+    
+    self.deleteButton = [[UIButton alloc] initWithFrame:deleteButtonRect];
+    [colorAndFontUtility buttonStyleFive:self.deleteButton withRoundEdges:YES];
+    [self.deleteButton setTitle:@"Delete Event" forState:UIControlStateNormal];
+    [colorAndFontUtility  setBorder:self.deleteButton withColor:[colorAndFontUtility redTextColor]];
+    [self.deleteButton addTarget:self action:@selector(deleteEvent:) forControlEvents: UIControlEventTouchUpInside];
+    
+    [self.scrollView addSubview:self.deleteButton];
+}
+
+-(IBAction) deleteEvent:(id)sender {
+    PFQuery *query = [PFQuery queryWithClassName:@"Event"];
+    [query getObjectInBackgroundWithId:self.eventID block:^(PFObject *event, NSError *error) {
+
+        [event deleteInBackground];
+    }];
+     [self.navigationController popToRootViewControllerAnimated:YES];
+}
+
+-(IBAction)showDatePicker:(id)sender{
+    self.deleteButton.hidden = YES;
+    [super showDatePicker:sender];
+}
+
+- (void)removeViews:(id)object {
+    [super removeViews:object];
+    self.deleteButton.hidden = NO;
 }
 - (IBAction)addGuestAndSubmit:(id)sender{
     PFQuery *query = [PFQuery queryWithClassName:@"Event"];

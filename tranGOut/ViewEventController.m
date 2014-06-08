@@ -496,6 +496,7 @@
         // remove old attending status
         if(!([self.attendingStatusOld length]>0)){
             event[@"undecidedGuests"] = [NSNumber numberWithInt:[[event objectForKey:@"undecidedGuests"] intValue]-1];
+            [[event relationForKey:@"Undecided"] removeObject:user];
         } else {
             PFRelation *relationOld = [user relationforKey:self.attendingStatusOld];
             [relationOld removeObject:event];

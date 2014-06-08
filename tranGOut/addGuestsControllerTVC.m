@@ -68,11 +68,14 @@
         
         for(int i = 0; i < [self.objects count]; i++){
             PFUser *user = [self.objects objectAtIndex:i];
-            if([self.selectedObjects containsObject:[self.objects objectAtIndex:i]])
+            if([self.selectedObjects containsObject:[self.objects objectAtIndex:i]]){
                 [relation addObject:user];
-            else
+                [[event relationForKey:@"Undecided"] addObject:user];
+            } else {
                 [relation removeObject:user];
-    }
+                [[event relationForKey:@"Undecided"] removeObject:user];
+            }
+        }
         NSLog(@"%lu", (unsigned long)[self.selectedObjects count]);
         event[@"undecidedGuests"] = [NSNumber numberWithInteger:([self.selectedObjects count])];
         [event saveInBackground];
@@ -160,8 +163,8 @@
     [cell setSelectionStyle:UITableViewCellSelectionStyleGray];
     tableView.tintColor = [UIColor blackColor];
     
-    PFObject *user = [self.objects objectAtIndex:indexPath.row]; //This assumes that your table has only one section and all cells are populated directly into that section from sourceArray.
-
+    PFObject *user = [self.objects objectAtIndex:indexPath.row];
+    
     if ([self.selectedObjects containsObject:user]) {
         cell.accessoryType = UITableViewCellAccessoryCheckmark;
     } else {
